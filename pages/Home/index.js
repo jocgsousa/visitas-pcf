@@ -237,6 +237,26 @@ class Home extends Component {
         </ContainerConfig>
       ),
     });
+
+    navigation.addListener("beforeRemove", (e) => {
+      e.preventDefault();
+
+      // Prompt the user before leaving the screen
+      Alert.alert(
+        "Encerrar sessão?",
+        "Após sair, os dados não serão mais sincronizados, tem certeza?",
+        [
+          { text: "Não", style: "cancel", onPress: () => {} },
+          {
+            text: "Sim",
+            style: "destructive",
+            // If the user confirmed, then we dispatch the action we blocked earlier
+            // This will continue the action that had triggered the removal of the screen
+            onPress: () => navigation.dispatch(e.data.action),
+          },
+        ]
+      );
+    });
   };
 
   handleSelectOptionFilter = (filter) => {

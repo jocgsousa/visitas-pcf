@@ -61,7 +61,7 @@ export const Form = styled.View`
   border-radius: 10px;
   height: 380px;
   flex: 1;
-  margin-top: 60px;
+  margin-top: 22%;
   margin-right: 10px;
   margin-left: 10px;
   margin-bottom: 10px;
@@ -93,7 +93,7 @@ export const Input = styled.TextInput`
   width: 300px;
   height: 50px;
   border-radius: 20px;
-  margin-top: 10px;
+  margin-top: 20px;
   padding-left: 10px;
   font-size: 20px;
   background: #fff;
@@ -125,7 +125,7 @@ export const Button = styled(RectButton)`
   height: 50px;
   border-radius: 20px;
   elevation: 1;
-  margin-top: 10px;
+  margin-top: 20px;
   background: #00cccc;
 `;
 
