@@ -393,7 +393,7 @@ class Home extends Component {
     const { navigation } = this.props;
 
     navigation.setOptions({
-      title: "VISITAS",
+      title: "VISITAS - HOJE",
       headerTitleAlign: "left",
       headerStyle: {
         backgroundColor: "#93efc2",

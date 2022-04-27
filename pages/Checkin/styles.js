@@ -60,7 +60,7 @@ export const TextButtonCheckin = styled.Text`
 `;
 
 export const ModalContainer = styled.View`
-  height: 108%;
+  height: 112%;
   width: 112%;
   background-color: #fff;
   align-items: center;
@@ -96,18 +96,20 @@ export const HeaderContainer = styled.View`
 `;
 
 export const ButtonClose = styled.Pressable`
-  align-items: center;
+  align-items: flex-end;
+  padding-right: 20px;
   justify-content: center;
   height: 100%;
-  width: 50px;
+  width: 100px;
   position: absolute;
   right: 0;
 `;
 
 export const List = styled.FlatList`
   height: 100%;
-  /* border: 1px solid red; */
-  margin-top: 40px;
+  border: 1px solid red;
+  margin-top: 50px;
+  margin-bottom: 10px;
 `;
 
 export const Item = styled(RectButton)`

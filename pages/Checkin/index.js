@@ -8,7 +8,9 @@ import Icon2 from "react-native-vector-icons/FontAwesome5";
 import Icon3 from "react-native-vector-icons/Ionicons";
 import Icon4 from "react-native-vector-icons/SimpleLineIcons";
 
-import { View, PermissionsAndroid, Platform, Alert } from "react-native";
+import { View, Alert, ActivityIndicator } from "react-native";
+
+import * as Location from "expo-location";
 
 import {
   Container,
@@ -35,9 +37,8 @@ class Checkin extends Component {
   state = {
     modal: false,
     historico: [],
-    latitude: "",
-    longitude: "",
-    watchID: 0,
+    location: "",
+    status: "",
   };
 
   componentDidMount() {
@@ -61,51 +62,28 @@ class Checkin extends Component {
   }
 
   handleCheckin = async () => {
-    if (Platform.OS === "ios") {
-      this.getLocation();
-    } else {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-        {
-          title: "Permissão de Acesso à Localização",
-          message: "Este aplicativo precisa acessar sua localização.",
-          buttonNeutral: "Pergunte-me depois",
-          buttonNegative: "Cancelar",
-          buttonPositive: "OK",
-        }
-      );
-      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        getLocation();
-      } else {
-        Alert.alert("Permissão de Localização negada", "adsd");
-      }
-    }
-  };
-
-  getLocation = () => {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const currentLatitude = JSON.stringify(position.coords.latitude);
-        const currentLongitude = JSON.stringify(position.coords.longitude);
-
-        this.setState({
-          latitude: currentLatitude,
-          longitude: currentLongitude,
-        });
-      },
-      (error) => alert(error.message),
-      { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
-    );
-    const watchID = navigator.geolocation.watchPosition((position) => {
-      const currentLatitude = JSON.stringify(position.coords.latitude);
-      const currentLongitude = JSON.stringify(position.coords.longitude);
-      this.setState({
-        latitude: currentLatitude,
-        longitude: currentLongitude,
-      });
-    });
     this.setState({
-      watchID,
+      loading: true,
+    });
+
+    try {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+
+      let location = await Location.getCurrentPositionAsync({});
+
+      this.setState({
+        status,
+        location: JSON.stringify(location),
+      });
+    } catch (error) {
+      Alert.alert(
+        "Falha ao salvar checkin",
+        "Por favor ative o GPS para que o checkin seja bem sucedido!"
+      );
+    }
+
+    this.setState({
+      loading: false,
     });
   };
 
@@ -160,7 +138,7 @@ class Checkin extends Component {
   };
 
   render() {
-    const { modal, historico, latitude, longitude, watchID } = this.state;
+    const { modal, historico, location, loading, status } = this.state;
 
     return (
       <Container>
@@ -194,7 +172,7 @@ class Checkin extends Component {
 
         <Form>
           <Title>
-            LT: {latitude} LG: {longitude} W: {watchID}{" "}
+            Location: {location} {String(status)}
           </Title>
           <Input height="70px" placeholder="Atividade" />
           <Input
@@ -216,9 +194,14 @@ class Checkin extends Component {
               background="#3399cc"
               onPress={() => this.handleCheckin()}
             >
-              <TextButtonCheckin>
-                Checkin <Icon3 name="location" size={20} />
-              </TextButtonCheckin>
+              {loading ? (
+                <ActivityIndicator size="large" color="#fff" />
+              ) : (
+                <TextButtonCheckin>
+                  Checkin
+                  <Icon3 name="location" size={20} />{" "}
+                </TextButtonCheckin>
+              )}
             </ButtonCheckin>
           </RootView>
         </Form>
