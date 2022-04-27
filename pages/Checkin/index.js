@@ -1,6 +1,11 @@
 import React, { Component } from "react";
 
-// import { View } from "react-native";
+import Modal from "react-native-modal";
+
+import Icon from "react-native-vector-icons/Entypo";
+import Ico from "react-native-vector-icons/Ionicons";
+
+import { View } from "react-native";
 
 import {
   Container,
@@ -9,10 +14,17 @@ import {
   RootView,
   ButtonCheckin,
   TextButtonCheckin,
+  ModalContainer,
+  HeaderContainer,
+  ButtonClose,
+  ContainerTitle,
+  Title,
 } from "./styles";
 
 class Checkin extends Component {
-  state = {};
+  state = {
+    modal: false,
+  };
 
   componentDidMount() {
     const { navigation, route } = this.props;
@@ -31,8 +43,33 @@ class Checkin extends Component {
   }
 
   render() {
+    const { modal } = this.state;
     return (
       <Container>
+        <Modal isVisible={modal}>
+          <View
+            style={{
+              flex: 1,
+              alignItems: "center",
+              justifyContent: "center",
+              width: "100%",
+              height: "100%",
+            }}
+          >
+            <ModalContainer>
+              <HeaderContainer>
+                <Title>Histórico de visitas</Title>
+                <ButtonClose onPress={() => this.setState({ modal: false })}>
+                  <Ico name="md-close" size={25} color="#336666" />
+                </ButtonClose>
+              </HeaderContainer>
+              <ContainerTitle>
+                <Title>Forneça o link de acesso ao servidor!</Title>
+              </ContainerTitle>
+            </ModalContainer>
+          </View>
+        </Modal>
+
         <Form>
           <Input height="70px" placeholder="Atividade" />
           <Input
@@ -42,8 +79,17 @@ class Checkin extends Component {
             style={{ height: 200, textAlignVertical: "top" }}
           />
           <RootView>
-            <ButtonCheckin>
-              <TextButtonCheckin>Checkin</TextButtonCheckin>
+            <ButtonCheckin onPress={() => this.setState({ modal: true })}>
+              <TextButtonCheckin>
+                Histórico <Icon name="clock" size={20} />
+              </TextButtonCheckin>
+            </ButtonCheckin>
+          </RootView>
+          <RootView>
+            <ButtonCheckin height="100px" background="#3399cc">
+              <TextButtonCheckin>
+                Checkin <Icon name="location" size={20} />
+              </TextButtonCheckin>
             </ButtonCheckin>
           </RootView>
         </Form>

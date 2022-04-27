@@ -64,10 +64,6 @@ class Home extends Component {
     });
   };
 
-  static navigationOptions = () => ({
-    title: "Fazer Login",
-  });
-
   handleNavigate = () => {
     const { navigation } = this.props;
     navigation.navigate("Home");
