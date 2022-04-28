@@ -60,17 +60,17 @@ export const TextButtonCheckin = styled.Text`
 `;
 
 export const ModalContainer = styled.View`
-  height: 112%;
-  width: 112%;
+  height: 100%;
+  width: 100%;
   background-color: #fff;
   align-items: center;
   justify-content: center;
-  /* border-radius: 10px; */
+  border-radius: 10px;
   background: #fff;
 `;
 
 export const ContainerList = styled.View`
-  height: 94%;
+  height: 90%;
   width: 100%;
   align-items: center;
   justify-content: center;
@@ -105,18 +105,20 @@ export const ButtonClose = styled.Pressable`
   right: 0;
 `;
 
-export const List = styled.FlatList`
-  height: 100%;
-  border: 1px solid red;
-  margin-top: 50px;
+export const List = styled.FlatList.attrs({
+  showsVerticalScrollIndicator: false,
+})`
+  height: 90%;
+  border: 1px solid #fff;
+  margin-top: 10%;
   margin-bottom: 10px;
 `;
 
 export const Item = styled(RectButton)`
-  height: 120px;
+  min-height: 120px;
   background-color: #fff;
   margin-top: 5px;
-  margin-bottom: 5px;
+  margin-bottom: 10px;
   margin-left: 5px;
   margin-right: 5px;
   border-radius: 5px;
@@ -151,12 +153,13 @@ export const TextInfo = styled.Text`
   color: #777;
   margin-right: 5px;
   font-size: 15px;
+  text-align: justify;
   margin-bottom: -8px;
 `;
 
 export const Status = styled.View`
   width: 5px;
-  height: 120px;
+  min-height: 100%;
   border-top-left-radius: 5px;
   border-bottom-left-radius: 5px;
   position: absolute;
@@ -168,3 +171,5 @@ export const ColIcon = styled.View`
   width: 25px;
   align-items: center;
 `;
+
+export const ColData = styled.ScrollView``;

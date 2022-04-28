@@ -26,11 +26,12 @@ import {
   Title,
   List,
   Item,
-  Status,
+  // Status,
   RowInfo,
   ColInfo,
   ColIcon,
   TextInfo,
+  ColData,
 } from "./styles";
 
 class Checkin extends Component {
@@ -92,7 +93,7 @@ class Checkin extends Component {
 
     return (
       <Item onPress={() => navigation.navigate("Checkin", item)}>
-        <Status complete={item.complete}></Status>
+        {/* <Status complete={item.complete}></Status> */}
         <RowInfo>
           <ColInfo width="100%">
             <ColIcon>
@@ -131,6 +132,24 @@ class Checkin extends Component {
               <Icon2 name="calendar" size={20} color="#00cc99" />
             </ColIcon>
             <TextInfo>{item.data}</TextInfo>
+          </ColInfo>
+
+          <ColInfo width="100%">
+            <ColIcon>
+              <Icon2 name="flag" size={20} color="#00cc99" />
+            </ColIcon>
+            <TextInfo style={{ backgroundColor: "#ccc" }}>
+              {item.atividade}
+            </TextInfo>
+          </ColInfo>
+
+          <ColInfo width="100%">
+            {/* <ColIcon> */}
+            {/* <Icon2 name="info" size={20} color="#00cc99" /> */}
+            {/* </ColIcon> */}
+            <ColData>
+              <TextInfo style={{ paddingBottom: 20 }}>{item.obs}</TextInfo>
+            </ColData>
           </ColInfo>
         </RowInfo>
       </Item>
