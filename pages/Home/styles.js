@@ -32,6 +32,34 @@ export const Item = styled(RectButton)`
   align-items: center;
 `;
 
+export const BeforeButton = styled(RectButton)`
+  position: absolute;
+  right: 0;
+  margin-top: ${(props) => (props.marginTop ? props.marginTop : "160px")};
+  margin-right: 2%;
+  width: 50px;
+  height: 50px;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.2);
+  /* border-radius: 25px; */
+  z-index: 2;
+`;
+
+export const AfterButton = styled(RectButton)`
+  position: absolute;
+  right: 0;
+  margin-top: ${(props) => (props.marginTop ? props.marginTop : "100px")};
+  margin-right: 2%;
+  width: 50px;
+  height: 50px;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.2);
+  /* border-radius: 25px; */
+  z-index: 2;
+`;
+
 export const RowInfo = styled.View`
   align-self: stretch;
   width: 98%;

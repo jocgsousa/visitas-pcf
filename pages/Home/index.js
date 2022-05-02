@@ -1,6 +1,10 @@
 import React, { Component } from "react";
 
-import { Alert } from "react-native";
+import { Alert, Dimensions } from "react-native";
+
+import NetInfo from "@react-native-community/netinfo";
+
+import { CommonActions } from "@react-navigation/native";
 
 import Icon from "react-native-vector-icons/FontAwesome";
 
@@ -17,10 +21,13 @@ import {
   ColIcon,
   ContainerConfig,
   Config,
+  AfterButton,
+  BeforeButton,
 } from "./styles";
 
 class Home extends Component {
   state = {
+    time: 0,
     visitas: [
       {
         id: 1,
@@ -400,11 +407,11 @@ class Home extends Component {
     ],
   };
 
-  componentDidMount = () => {
+  componentDidMount() {
     const { navigation } = this.props;
 
     navigation.setOptions({
-      title: "VISITAS - HOJE",
+      title: "VISITAS",
       headerTitleAlign: "left",
       headerStyle: {
         backgroundColor: "#93efc2",
@@ -414,8 +421,8 @@ class Home extends Component {
 
       headerRight: () => (
         <ContainerConfig>
-          <Config>
-            <Icon name="calendar" size={25} />
+          <Config onPress={() => navigation.dispatch(CommonActions.goBack())}>
+            <Icon name="sign-out" size={25} />
           </Config>
         </ContainerConfig>
       ),
@@ -440,7 +447,31 @@ class Home extends Component {
         ]
       );
     });
+
+    this.checkNet();
+  }
+
+  checkNet = async () => {
+    const time = setInterval(async () => {
+      const response = await NetInfo.fetch();
+      // console.log(response.isConnected);
+      if (response.isConnected) {
+        // console.log("Conectado");
+      } else {
+        // console.log("Desconectado");
+      }
+    }, 1000);
+
+    this.setState({
+      time,
+    });
   };
+
+  componentWillUnmount() {
+    const { time } = this.state;
+
+    clearInterval(time);
+  }
 
   handleSelectOptionFilter = (filter) => {
     this.setState({
@@ -499,9 +530,17 @@ class Home extends Component {
 
   render() {
     const { visitas } = this.state;
+    const windowHeight = Dimensions.get("window").height;
 
     return (
       <Container>
+        <TextInfo></TextInfo>
+        <AfterButton marginTop={`${windowHeight - 200}px`}>
+          <Icon name="chevron-right" size={20} color="#fff" />
+        </AfterButton>
+        <BeforeButton marginTop={`${windowHeight - 140}px`}>
+          <Icon name="chevron-left" size={20} color="#fff" />
+        </BeforeButton>
         <List
           data={visitas}
           renderItem={this.renderItem}
