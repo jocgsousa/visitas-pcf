@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-import { View, Dimensions } from "react-native";
+import { View } from "react-native";
 
 import Icon from "react-native-vector-icons/SimpleLineIcons";
 
@@ -11,6 +11,8 @@ import Modal from "react-native-modal";
 import LottieView from "lottie-react-native";
 
 import animationChildrensHappy from "./assets/animations/childrens_happy.json";
+
+import animationLoading from "./assets/animations/loading.json";
 
 import {
   Container,
@@ -25,6 +27,7 @@ import {
   TextButtonSubmit,
   Config,
   ModalContainer,
+  ModalLoading,
   HeaderContainer,
   ButtonClose,
   ContainerTitle,
@@ -36,6 +39,7 @@ import {
 class Home extends Component {
   state = {
     modalVisible: false,
+    loading: false,
   };
 
   componentDidMount = () => {
@@ -69,15 +73,20 @@ class Home extends Component {
     });
   };
 
-  handleNavigate = () => {
+  handleSigin = () => {
     const { navigation } = this.props;
-    navigation.navigate("Home");
+    this.setState({ loading: true });
+
+    setTimeout(() => {
+      this.setState({
+        loading: false,
+      });
+      navigation.navigate("Home");
+    }, 3000);
   };
 
   render() {
-    const { modalVisible } = this.state;
-
-    const windowWidth = Dimensions.get("window").width;
+    const { modalVisible, loading } = this.state;
 
     return (
       <Container>
@@ -105,7 +114,7 @@ class Home extends Component {
               <InputUrl placeholder="URL" />
 
               <FooterForm>
-                <Button onPress={() => this.handleNavigate()}>
+                <Button onPress={() => {}}>
                   <TextButtonSubmit>Conectar</TextButtonSubmit>
                 </Button>
               </FooterForm>
@@ -113,10 +122,26 @@ class Home extends Component {
           </View>
         </Modal>
 
+        <Modal isVisible={loading}>
+          <ModalLoading>
+            <LottieView
+              source={animationLoading}
+              loop
+              autoPlay
+              style={{
+                width: "100%",
+                height: "100%",
+                marginTop: 10,
+                // resizeMode: "contain",
+              }}
+            />
+          </ModalLoading>
+        </Modal>
+
         <Form>
-          <HeaderForm>
+          {/* <HeaderForm>
             <TitleForm>LOGIN</TitleForm>
-          </HeaderForm>
+          </HeaderForm> */}
 
           <BodyForm>
             <Input placeholder="Nick" />
@@ -124,7 +149,7 @@ class Home extends Component {
           </BodyForm>
 
           <FooterForm>
-            <Button onPress={() => this.handleNavigate()}>
+            <Button onPress={() => this.handleSigin()}>
               <TextButtonSubmit>Entrar</TextButtonSubmit>
             </Button>
           </FooterForm>

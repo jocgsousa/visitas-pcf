@@ -7,14 +7,14 @@ import {
 
 export const Container = styled(GestureHandlerRootView)`
   flex: 1;
-  background: #fff;
+  background: #93efc2;
   width: 100%;
   height: 100%;
 `;
 
 export const List = styled.FlatList`
   flex: 1;
-  background-color: #eee;
+  background-color: #93efc2;
   height: 100%;
 `;
 

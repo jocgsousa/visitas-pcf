@@ -8,7 +8,7 @@ import {
 
 export const Container = styled.View`
   flex: 1;
-  background: #93efc2;
+  background: #00cc99;
   width: 100%;
 `;
 
@@ -16,6 +16,15 @@ export const ContainerAnimation = styled.View`
   /* border: 1px solid red; */
   position: absolute;
   margin-top: 82%;
+`;
+
+export const ModalLoading = styled.View`
+  height: 80%;
+  width: 100%;
+  background-color: transparent;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
 `;
 
 export const ModalContainer = styled.View`
@@ -65,9 +74,9 @@ export const ButtonClose = styled.Pressable`
 export const Form = styled.View`
   /* elevation: 7; */
   border-radius: 10px;
-  height: 380px;
-  flex: 1;
-  margin-top: 20%;
+  height: 80%;
+  /* flex: 1; */
+  margin-top: 0%;
   margin-right: 10px;
   margin-left: 10px;
   margin-bottom: 10px;
