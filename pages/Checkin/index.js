@@ -48,15 +48,8 @@ class Checkin extends Component {
 
   async componentDidMount() {
     const { navigation, route } = this.props;
+
     const name = route.params.user.name.split(" ");
-
-    const visitasSaved = await AsyncStorage.getItem("visitas");
-
-    this.setState({
-      historico: route.params.historico,
-      visita: route.params,
-      visitas: visitasSaved,
-    });
 
     navigation.setOptions({
       title: `VISITA: ${String(name[0]).toUpperCase()}`,
@@ -67,6 +60,14 @@ class Checkin extends Component {
       animation: "flip",
       headerBackVisible: true,
       headerRight: () => null,
+    });
+
+    const visitasSaved = await AsyncStorage.getItem("visitas");
+
+    this.setState({
+      historico: route.params.historico,
+      visita: route.params,
+      visitas: JSON.parse(visitasSaved),
     });
   }
 
@@ -90,25 +91,43 @@ class Checkin extends Component {
 
       let location = await Location.getCurrentPositionAsync({});
 
-      // const local = {
-      //   latitute: location.coords.latitude,
-      //   longitude: location.coords.longitude,
-      // };
-
       if (visitas) {
         console.log("Tem visitas");
-      } else {
-        console.log("Sem visitas");
+
         const novavisita = {
           ...visita,
           atividade,
           obs,
           complete: true,
+          latitute: location.coords.latitude,
+          longitude: location.coords.longitude,
         };
-        console.log(novavisita);
-      }
 
-      // await AsyncStorage.setItem("visitas", JSON.stringify(newstateSave));
+        const visitasSaved = [...visitas, novavisita];
+
+        await AsyncStorage.setItem("visitas", JSON.stringify(visitasSaved));
+      } else {
+        console.log("Sem visitas");
+
+        const localStorageVisitas = [];
+
+        const novavisita = {
+          ...visita,
+          atividade,
+          obs,
+          complete: true,
+          latitute: location.coords.latitude,
+          longitude: location.coords.longitude,
+        };
+        localStorageVisitas.push(novavisita);
+
+        console.log(localStorageVisitas);
+
+        await AsyncStorage.setItem(
+          "visitas",
+          JSON.stringify(localStorageVisitas)
+        );
+      }
     } catch (error) {
       Alert.alert(
         "Falha ao salvar checkin",

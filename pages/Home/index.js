@@ -10,6 +10,8 @@ import Icon from "react-native-vector-icons/FontAwesome";
 
 import Icon2 from "react-native-vector-icons/FontAwesome5";
 
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 import {
   Container,
   Item,
@@ -599,8 +601,12 @@ class Home extends Component {
     ],
   };
 
-  componentDidMount() {
+  async componentDidMount() {
     const { navigation } = this.props;
+
+    this.setState({ loading: true });
+
+    // await AsyncStorage.removeItem("visitas");
 
     navigation.setOptions({
       title: "VISITAS",
@@ -639,6 +645,34 @@ class Home extends Component {
         ]
       );
     });
+
+    const { visitas } = this.state;
+
+    const localStorageVisitas = await AsyncStorage.getItem("visitas");
+
+    if (localStorageVisitas) {
+      const visitasparser = JSON.parse(localStorageVisitas);
+
+      const newStateVisitas = [];
+
+      visitas.forEach((visita) => {
+        const isCheked = visitasparser.find(
+          (v) => Number(v.id) === Number(visita.id)
+        );
+
+        if (isCheked) {
+          newStateVisitas.push(isCheked);
+        } else {
+          newStateVisitas.push(visita);
+        }
+      });
+
+      this.setState({
+        visitas: newStateVisitas,
+      });
+    }
+
+    this.setState({ loading: false });
 
     this.checkNet();
   }
