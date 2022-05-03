@@ -12,6 +12,10 @@ import Icon2 from "react-native-vector-icons/FontAwesome5";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+import LottieView from "lottie-react-native";
+
+import loadingfile from "./assets/animations/loading.json";
+
 import {
   Container,
   Item,
@@ -25,10 +29,13 @@ import {
   Config,
   AfterButton,
   BeforeButton,
+  ViewContainer,
+  ViewContainerLoading,
 } from "./styles";
 
 class Home extends Component {
   state = {
+    loading: false,
     time: 0,
     visitas: [
       {
@@ -755,23 +762,30 @@ class Home extends Component {
   };
 
   render() {
-    const { visitas } = this.state;
+    const { visitas, loading } = this.state;
     const windowHeight = Dimensions.get("window").height;
 
     return (
       <Container>
-        <TextInfo></TextInfo>
-        <AfterButton marginTop={`${windowHeight - 200}px`}>
-          <Icon name="chevron-right" size={20} color="#fff" />
-        </AfterButton>
-        <BeforeButton marginTop={`${windowHeight - 140}px`}>
-          <Icon name="chevron-left" size={20} color="#fff" />
-        </BeforeButton>
-        <List
-          data={visitas}
-          renderItem={this.renderItem}
-          keyExtractor={(item) => item.id}
-        />
+        {loading ? (
+          <ViewContainerLoading>
+            <LottieView source={loadingfile} autoPlay loop />
+          </ViewContainerLoading>
+        ) : (
+          <ViewContainer>
+            <AfterButton marginTop={`${windowHeight - 200}px`}>
+              <Icon name="chevron-right" size={20} color="#fff" />
+            </AfterButton>
+            <BeforeButton marginTop={`${windowHeight - 140}px`}>
+              <Icon name="chevron-left" size={20} color="#fff" />
+            </BeforeButton>
+            <List
+              data={visitas}
+              renderItem={this.renderItem}
+              keyExtractor={(item) => item.id}
+            />
+          </ViewContainer>
+        )}
       </Container>
     );
   }

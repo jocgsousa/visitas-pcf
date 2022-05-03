@@ -104,6 +104,15 @@ export const ColIcon = styled.View`
 
 export const ContainerConfig = styled(GestureHandlerRootView)``;
 
+export const ViewContainer = styled.View`
+  flex: 1;
+`;
+
+export const ViewContainerLoading = styled.View`
+  flex: 1;
+  justify-content: center;
+`;
+
 export const Config = styled(RectButton)`
   height: 40px;
   width: 40px;
