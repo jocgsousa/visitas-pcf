@@ -8,12 +8,9 @@ import Icon2 from "react-native-vector-icons/FontAwesome5";
 import Icon3 from "react-native-vector-icons/Ionicons";
 import Icon4 from "react-native-vector-icons/SimpleLineIcons";
 
-import {
-  View,
-  Alert,
-  ActivityIndicator,
-  AsyncStorageStatic,
-} from "react-native";
+import { View, Alert, ActivityIndicator } from "react-native";
+
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import * as Location from "expo-location";
 
@@ -43,20 +40,22 @@ class Checkin extends Component {
   state = {
     modal: false,
     historico: [],
-    latitute: "",
-    longitude: "",
     atividade: "",
     obs: "",
     visita: "",
+    visitas: [],
   };
 
-  componentDidMount() {
+  async componentDidMount() {
     const { navigation, route } = this.props;
     const name = route.params.user.name.split(" ");
+
+    const visitasSaved = await AsyncStorage.getItem("visitas");
 
     this.setState({
       historico: route.params.historico,
       visita: route.params,
+      visitas: visitasSaved,
     });
 
     navigation.setOptions({
@@ -72,7 +71,8 @@ class Checkin extends Component {
   }
 
   handleCheckin = async () => {
-    const { atividade, visita, obs, latitute, longitude } = this.state;
+    const { atividade, visita, visitas, obs } = this.state;
+
     this.setState({
       loading: true,
     });
@@ -86,16 +86,29 @@ class Checkin extends Component {
     }
 
     try {
-      let { status } = await Location.requestForegroundPermissionsAsync();
+      await Location.requestForegroundPermissionsAsync();
 
       let location = await Location.getCurrentPositionAsync({});
 
-      this.setState({
-        status,
-        location: JSON.stringify(location),
-        latitute: location.coords.latitude,
-        longitude: location.coords.longitude,
-      });
+      // const local = {
+      //   latitute: location.coords.latitude,
+      //   longitude: location.coords.longitude,
+      // };
+
+      if (visitas) {
+        console.log("Tem visitas");
+      } else {
+        console.log("Sem visitas");
+        const novavisita = {
+          ...visita,
+          atividade,
+          obs,
+          complete: true,
+        };
+        console.log(novavisita);
+      }
+
+      // await AsyncStorage.setItem("visitas", JSON.stringify(newstateSave));
     } catch (error) {
       Alert.alert(
         "Falha ao salvar checkin",
