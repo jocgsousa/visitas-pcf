@@ -49,7 +49,7 @@ class Home extends Component {
       title: "Sistema de visitas PCF",
       headerTitleAlign: "center",
       headerStyle: {
-        backgroundColor: "#93efc2",
+        backgroundColor: "#8be3d1",
       },
       // animation: "slide_from_bottom",
 

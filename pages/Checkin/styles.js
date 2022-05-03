@@ -9,7 +9,7 @@ import {
 export const Container = styled.View`
   flex: 1;
   width: 100%;
-  background: #93efc2;
+  background: #8be3d1;
   align-items: center;
   justify-content: center;
   /* border: 1px solid red; */
@@ -57,6 +57,15 @@ export const ButtonCheckin = styled(RectButton)`
 export const TextButtonCheckin = styled.Text`
   color: white;
   font-size: 20px;
+`;
+
+export const ModalLoading = styled.View`
+  height: 80%;
+  width: 100%;
+  background-color: transparent;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
 `;
 
 export const ModalContainer = styled.View`

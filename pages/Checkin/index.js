@@ -12,7 +12,11 @@ import { View, Alert, ActivityIndicator } from "react-native";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+import LottieView from "lottie-react-native";
+
 import * as Location from "expo-location";
+
+import animationLoadingMap from "./assets/animations/loading-map.json";
 
 import {
   Container,
@@ -22,6 +26,7 @@ import {
   ButtonCheckin,
   TextButtonCheckin,
   ModalContainer,
+  ModalLoading,
   HeaderContainer,
   ButtonClose,
   ContainerList,
@@ -43,6 +48,7 @@ class Checkin extends Component {
     atividade: "",
     obs: "",
     visita: "",
+    complete: false,
     visitas: [],
   };
 
@@ -55,7 +61,7 @@ class Checkin extends Component {
       title: `VISITA: ${String(name[0]).toUpperCase()}`,
       headerTitleAlign: "center",
       headerStyle: {
-        backgroundColor: "#93efc2",
+        backgroundColor: "#8be3d1",
       },
       animation: "flip",
       headerBackVisible: true,
@@ -68,6 +74,9 @@ class Checkin extends Component {
       historico: route.params.historico,
       visita: route.params,
       visitas: JSON.parse(visitasSaved),
+      atividade: route.params.atividade,
+      obs: route.params.obs,
+      complete: route.params.complete,
     });
   }
 
@@ -209,7 +218,7 @@ class Checkin extends Component {
   };
 
   render() {
-    const { modal, historico, loading, atividade, obs } = this.state;
+    const { modal, historico, loading, atividade, obs, complete } = this.state;
 
     return (
       <Container>
@@ -240,6 +249,25 @@ class Checkin extends Component {
             </ModalContainer>
           </View>
         </Modal>
+
+        <Modal isVisible={loading}>
+          <ModalLoading>
+            <LottieView
+              source={animationLoadingMap}
+              loop
+              autoPlay
+              style={
+                {
+                  // width: "50%",
+                  // height: "50%",
+                  // marginTop: 10,
+                  // resizeMode: "contain",
+                }
+              }
+            />
+          </ModalLoading>
+        </Modal>
+
         <Form>
           <Input
             height="70px"
@@ -251,6 +279,7 @@ class Checkin extends Component {
             placeholder="Observação:"
             onChangeText={(value) => this.setState({ obs: value })}
             multiline={true}
+            value={obs}
             numberOfLines={4}
             style={{ height: 200, textAlignVertical: "top" }}
           />

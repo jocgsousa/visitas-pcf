@@ -619,7 +619,7 @@ class Home extends Component {
       title: "VISITAS",
       headerTitleAlign: "left",
       headerStyle: {
-        backgroundColor: "#93efc2",
+        backgroundColor: "#8be3d1",
       },
       animation: "slide_from_left",
       headerBackVisible: false,

@@ -8,7 +8,7 @@ import {
 
 export const Container = styled.View`
   flex: 1;
-  background: #00cc99;
+  background: #8be3d1;
   width: 100%;
 `;
 
@@ -154,7 +154,7 @@ export const Config = styled(RectButton)`
   height: 40px;
   border-radius: 20px;
   margin-top: 10px;
-  background: #93efc2;
+  background: #8be3d1;
 `;
 
 export const TextButtonSubmit = styled.Text`

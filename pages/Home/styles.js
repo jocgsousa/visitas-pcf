@@ -7,26 +7,31 @@ import {
 
 export const Container = styled(GestureHandlerRootView)`
   flex: 1;
-  background: #93efc2;
+  background: #8be3d1;
   width: 100%;
   height: 100%;
 `;
 
-export const List = styled.FlatList`
+export const List = styled.FlatList.attrs({
+  showsVerticalScrollIndicator: false,
+})`
   flex: 1;
-  background-color: #93efc2;
+  background-color: #8be3d1;
   height: 100%;
+  margin-left: -5px;
+  margin-right: -5px;
 `;
 
 export const Item = styled(RectButton)`
   height: 120px;
   background-color: #fff;
-  margin-top: 10px;
+  /* margin-top: 10px; */
   margin-left: 5px;
   margin-right: 5px;
-  border-radius: 5px;
+  /* border-radius: 5px; */
   border-left-width: 10px;
-  elevation: 1.5;
+  margin-bottom: 1px;
+  /* elevation: 1.5; */
   align-self: stretch;
   flex-direction: row;
   align-items: center;
@@ -90,8 +95,8 @@ export const TextInfo = styled.Text`
 export const Status = styled.View`
   width: 5px;
   height: 120px;
-  border-top-left-radius: 5px;
-  border-bottom-left-radius: 5px;
+  /* border-top-left-radius: 5px; */
+  /* border-bottom-left-radius: 5px; */
   position: absolute;
   margin-left: -10px;
   background-color: ${(props) => (props.complete ? "#00cc33" : "#777")};
