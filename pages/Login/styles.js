@@ -12,6 +12,16 @@ export const Container = styled.ScrollView`
   width: 100%;
 `;
 
+export const ContainerAnimation = styled.View`
+  /* min-height: 20%; */
+  justify-content: flex-end;
+  border: 1px solid red;
+  position: absolute;
+  margin-top: 20%;
+  flex: 1;
+  height: 100%;
+`;
+
 export const ModalContainer = styled.View`
   height: 80%;
   width: 100%;
@@ -68,7 +78,8 @@ export const Form = styled.View`
   align-items: center;
   justify-content: center;
   padding: 10px;
-  background: #93efc2;
+  /* background: #93efc2; */
+  z-index: 2;
 `;
 
 export const HeaderForm = styled.View`

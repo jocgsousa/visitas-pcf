@@ -1,12 +1,16 @@
 import React, { Component } from "react";
 
-import { View } from "react-native";
+import { View, Dimensions } from "react-native";
 
 import Icon from "react-native-vector-icons/SimpleLineIcons";
 
 import Ico from "react-native-vector-icons/Ionicons";
 
 import Modal from "react-native-modal";
+
+import LottieView from "lottie-react-native";
+
+import animationChildrensHappy from "./assets/animations/childrens_happy.json";
 
 import {
   Container,
@@ -26,6 +30,7 @@ import {
   ContainerTitle,
   Title,
   ContainerConfig,
+  ContainerAnimation,
 } from "./styles";
 
 class Home extends Component {
@@ -71,6 +76,8 @@ class Home extends Component {
 
   render() {
     const { modalVisible } = this.state;
+
+    const windowWidth = Dimensions.get("window").width;
 
     return (
       <Container>
@@ -122,6 +129,19 @@ class Home extends Component {
             </Button>
           </FooterForm>
         </Form>
+
+        <ContainerAnimation>
+          <LottieView
+            source={animationChildrensHappy}
+            loop
+            autoPlay
+            style={{
+              width: windowWidth,
+              height: 200,
+              // resizeMode: "contain",
+            }}
+          />
+        </ContainerAnimation>
       </Container>
     );
   }
