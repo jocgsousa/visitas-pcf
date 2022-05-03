@@ -137,7 +137,8 @@ class Home extends Component {
             autoPlay
             style={{
               width: windowWidth,
-              height: 200,
+              height: 210,
+              marginTop: 10,
               // resizeMode: "contain",
             }}
           />

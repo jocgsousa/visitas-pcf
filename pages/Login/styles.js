@@ -6,20 +6,16 @@ import {
   RectButton,
 } from "react-native-gesture-handler";
 
-export const Container = styled.ScrollView`
+export const Container = styled.View`
   flex: 1;
   background: #93efc2;
   width: 100%;
 `;
 
 export const ContainerAnimation = styled.View`
-  /* min-height: 20%; */
-  justify-content: flex-end;
-  border: 1px solid red;
-  position: absolute;
-  margin-top: 20%;
-  flex: 1;
-  height: 100%;
+  /* border: 1px solid red; */
+  position: relative;
+  margin-top: -40%;
 `;
 
 export const ModalContainer = styled.View`
@@ -71,7 +67,7 @@ export const Form = styled.View`
   border-radius: 10px;
   height: 380px;
   flex: 1;
-  margin-top: 22%;
+  margin-top: 20%;
   margin-right: 10px;
   margin-left: 10px;
   margin-bottom: 10px;
