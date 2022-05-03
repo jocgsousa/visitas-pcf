@@ -8,7 +8,12 @@ import Icon2 from "react-native-vector-icons/FontAwesome5";
 import Icon3 from "react-native-vector-icons/Ionicons";
 import Icon4 from "react-native-vector-icons/SimpleLineIcons";
 
-import { View, Alert, ActivityIndicator } from "react-native";
+import {
+  View,
+  Alert,
+  ActivityIndicator,
+  AsyncStorageStatic,
+} from "react-native";
 
 import * as Location from "expo-location";
 
@@ -38,8 +43,11 @@ class Checkin extends Component {
   state = {
     modal: false,
     historico: [],
-    location: "",
-    status: "",
+    latitute: "",
+    longitude: "",
+    atividade: "",
+    obs: "",
+    visita: "",
   };
 
   componentDidMount() {
@@ -48,6 +56,7 @@ class Checkin extends Component {
 
     this.setState({
       historico: route.params.historico,
+      visita: route.params,
     });
 
     navigation.setOptions({
@@ -63,9 +72,18 @@ class Checkin extends Component {
   }
 
   handleCheckin = async () => {
+    const { atividade, visita, obs, latitute, longitude } = this.state;
     this.setState({
       loading: true,
     });
+
+    if (atividade === "") {
+      Alert.alert("Ops!", "Por favor informe a atividade a ser realizada!");
+      this.setState({
+        loading: false,
+      });
+      return false;
+    }
 
     try {
       let { status } = await Location.requestForegroundPermissionsAsync();
@@ -75,6 +93,8 @@ class Checkin extends Component {
       this.setState({
         status,
         location: JSON.stringify(location),
+        latitute: location.coords.latitude,
+        longitude: location.coords.longitude,
       });
     } catch (error) {
       Alert.alert(
@@ -157,7 +177,7 @@ class Checkin extends Component {
   };
 
   render() {
-    const { modal, historico, location, loading, status } = this.state;
+    const { modal, historico, loading, atividade, obs } = this.state;
 
     return (
       <Container>
@@ -188,14 +208,16 @@ class Checkin extends Component {
             </ModalContainer>
           </View>
         </Modal>
-
         <Form>
-          <Title>
-            Location: {location} {String(status)}
-          </Title>
-          <Input height="70px" placeholder="Atividade" />
+          <Input
+            height="70px"
+            placeholder="Atividade"
+            value={atividade}
+            onChangeText={(value) => this.setState({ atividade: value })}
+          />
           <Input
             placeholder="Observação:"
+            onChangeText={(value) => this.setState({ obs: value })}
             multiline={true}
             numberOfLines={4}
             style={{ height: 200, textAlignVertical: "top" }}
