@@ -14,8 +14,8 @@ export const Container = styled.View`
 
 export const ContainerAnimation = styled.View`
   /* border: 1px solid red; */
-  position: relative;
-  margin-top: -40%;
+  position: absolute;
+  margin-top: 82%;
 `;
 
 export const ModalContainer = styled.View`
