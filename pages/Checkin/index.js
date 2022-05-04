@@ -293,15 +293,19 @@ class Checkin extends Component {
           <RootView>
             <ButtonCheckin
               height="100px"
-              background="#3399cc"
-              onPress={() => this.handleCheckin()}
+              background={complete ? "#009966" : "#3399cc"}
+              onPress={() => (!complete ? this.handleCheckin() : {})}
             >
               {loading ? (
                 <ActivityIndicator size="large" color="#fff" />
               ) : (
                 <TextButtonCheckin>
-                  Checkin
-                  <Icon3 name="location" size={20} />{" "}
+                  Check-in
+                  {complete ? (
+                    <Icon3 name="checkmark-circle" size={20} />
+                  ) : (
+                    <Icon3 name="location" size={20} />
+                  )}
                 </TextButtonCheckin>
               )}
             </ButtonCheckin>

@@ -41,6 +41,14 @@ export const RootView = styled(GestureHandlerRootView)`
   justify-content: center;
 `;
 
+export const InfoStatusSaved = styled(RectButton)`
+  height: 30px;
+  height: 30px;
+  background: transparent;
+  justify-content: center;
+  align-items: center;
+`;
+
 export const ButtonCheckin = styled(RectButton)`
   width: 95%;
   height: ${(props) => (props.height ? props.height : "60px")};

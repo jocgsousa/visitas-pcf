@@ -113,6 +113,24 @@ export const ViewContainer = styled.View`
   flex: 1;
 `;
 
+export const RootView = styled(GestureHandlerRootView)`
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  z-index: 3;
+`;
+
+export const InfoStatusSaved = styled(RectButton)`
+  width: 40px;
+  height: 40px;
+  border-radius: 20px;
+  background: transparent;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  margin-left: -40px;
+`;
+
 export const ViewContainerLoading = styled.View`
   flex: 1;
   justify-content: center;

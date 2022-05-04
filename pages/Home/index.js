@@ -14,6 +14,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import LottieView from "lottie-react-native";
 
+import Icon3 from "react-native-vector-icons/Ionicons";
+
 import loadingfile from "./assets/animations/loading.json";
 
 import {
@@ -31,6 +33,8 @@ import {
   BeforeButton,
   ViewContainer,
   ViewContainerLoading,
+  RootView,
+  InfoStatusSaved,
 } from "./styles";
 
 class Home extends Component {
@@ -276,7 +280,7 @@ class Home extends Component {
         },
         atividade: "",
         obs: "",
-        complete: true,
+        complete: false,
         latitude: "",
         longitude: "",
         historico: [],
@@ -757,6 +761,14 @@ class Home extends Component {
             <TextInfo>{item.data}</TextInfo>
           </ColInfo>
         </RowInfo>
+
+        <InfoStatusSaved>
+          {item.save ? (
+            <Icon3 name="checkmark-circle" color="#009966" size={20} />
+          ) : (
+            <Icon3 name="alert-circle" color="#777777" size={20} />
+          )}
+        </InfoStatusSaved>
       </Item>
     );
   };
