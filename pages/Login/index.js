@@ -10,6 +10,8 @@ import Modal from "react-native-modal";
 
 import LottieView from "lottie-react-native";
 
+import { io } from "socket.io-client";
+
 import animationChildrensHappy from "./assets/animations/childrens_happy.json";
 
 import animationLoading from "./assets/animations/loading.json";
@@ -17,8 +19,8 @@ import animationLoading from "./assets/animations/loading.json";
 import {
   Container,
   Form,
-  HeaderForm,
-  TitleForm,
+  // HeaderForm,
+  // TitleForm,
   BodyForm,
   Input,
   InputUrl,
@@ -36,13 +38,17 @@ import {
   ContainerAnimation,
 } from "./styles";
 
+window.navigator.userAgent = "react-native";
+
 class Home extends Component {
   state = {
     modalVisible: false,
     loading: false,
+    api: "https://servidorseaspac.loca.lt/",
   };
 
   componentDidMount = () => {
+    const { api } = this.state;
     const { navigation } = this.props;
 
     navigation.setOptions({
@@ -63,6 +69,14 @@ class Home extends Component {
           />
         </ContainerConfig>
       ),
+    });
+
+    const socket = io(api);
+
+    socket.connect();
+
+    socket.on("connection", (socket) => {
+      console.log(socket.id); // x8WIv7-mJelg7on_ALbx
     });
   };
 
@@ -86,7 +100,7 @@ class Home extends Component {
   };
 
   render() {
-    const { modalVisible, loading } = this.state;
+    const { modalVisible, loading, api } = this.state;
 
     return (
       <Container>
@@ -111,7 +125,7 @@ class Home extends Component {
               <ContainerTitle>
                 <Title>Forneça o link de acesso ao servidor!</Title>
               </ContainerTitle>
-              <InputUrl placeholder="URL" />
+              <InputUrl placeholder="URL" value={api} />
 
               <FooterForm>
                 <Button onPress={() => {}}>
