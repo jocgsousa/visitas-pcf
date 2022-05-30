@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-import { View } from "react-native";
+import { Alert, View } from "react-native";
 
 import Icon from "react-native-vector-icons/SimpleLineIcons";
 
@@ -11,6 +11,10 @@ import Modal from "react-native-modal";
 import LottieView from "lottie-react-native";
 
 import { io } from "socket.io-client";
+
+import axios from "axios";
+
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import animationChildrensHappy from "./assets/animations/childrens_happy.json";
 
@@ -44,10 +48,12 @@ class Home extends Component {
   state = {
     modalVisible: false,
     loading: false,
-    api: "https://servidorseaspac.loca.lt/",
+    nick: "",
+    password: "",
+    api: "",
   };
 
-  componentDidMount = () => {
+  componentDidMount = async () => {
     const { api } = this.state;
     const { navigation } = this.props;
 
@@ -78,6 +84,14 @@ class Home extends Component {
     socket.on("connection", (socket) => {
       console.log(socket.id); // x8WIv7-mJelg7on_ALbx
     });
+
+    const data = await AsyncStorage.getItem("api");
+
+    const dataParsed = JSON.parse(data);
+
+    this.setState({
+      api: dataParsed.url,
+    });
   };
 
   handleModal = () => {
@@ -87,20 +101,62 @@ class Home extends Component {
     });
   };
 
-  handleSigin = () => {
+  handleSigin = async () => {
+    const { api, nick, password } = this.state;
+
     const { navigation } = this.props;
+
     this.setState({ loading: true });
 
-    setTimeout(() => {
-      this.setState({
-        loading: false,
+    const data = {
+      nick,
+      password,
+    };
+
+    await axios
+      .post(`${api}/create-session`, data)
+      .then(() => {
+        navigation.navigate("Home");
+      })
+      .catch((error) => {
+        console.log(error.response.data);
+        if (error.response.data.password && !error.response.data.user) {
+          Alert.alert("Senha!", error.response.data.error);
+        }
+        if (!error.response.data.password && error.response.data.user) {
+          Alert.alert("Usuário", error.response.data.error);
+        }
+
+        if (!error.response) {
+          Alert.alert(
+            "Conexão",
+            "Falha ao realizar conexão com o servidor, tente novamente mais tarde."
+          );
+        }
       });
-      navigation.navigate("Home");
-    }, 3000);
+
+    this.setState({ loading: false });
+  };
+
+  handleSaveApi = async () => {
+    const { api } = this.state;
+    const data = {
+      url: api,
+      date: new Date(),
+    };
+
+    try {
+      await AsyncStorage.setItem("api", JSON.stringify(data));
+      this.setState({
+        modalVisible: false,
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   render() {
-    const { modalVisible, loading, api } = this.state;
+    const { modalVisible, loading, api, nick, password } = this.state;
 
     return (
       <Container>
@@ -123,13 +179,17 @@ class Home extends Component {
                 </ButtonClose>
               </HeaderContainer>
               <ContainerTitle>
-                <Title>Forneça o link de acesso ao servidor!</Title>
+                <Title>Forneça o link de acesso ao servidor! </Title>
               </ContainerTitle>
-              <InputUrl placeholder="URL" value={api} />
+              <InputUrl
+                placeholder="URL"
+                value={api}
+                onChangeText={(e) => this.setState({ api: e })}
+              />
 
               <FooterForm>
-                <Button onPress={() => {}}>
-                  <TextButtonSubmit>Conectar</TextButtonSubmit>
+                <Button onPress={() => this.handleSaveApi()}>
+                  <TextButtonSubmit>Salvar</TextButtonSubmit>
                 </Button>
               </FooterForm>
             </ModalContainer>
@@ -158,8 +218,17 @@ class Home extends Component {
           </HeaderForm> */}
 
           <BodyForm>
-            <Input placeholder="Nick" />
-            <Input placeholder="Password" secureTextEntry={true} />
+            <Input
+              placeholder="Nick"
+              onChangeText={(e) => this.setState({ nick: e })}
+              value={nick}
+            />
+            <Input
+              placeholder="Password"
+              secureTextEntry={true}
+              onChangeText={(e) => this.setState({ password: e })}
+              value={password}
+            />
           </BodyForm>
 
           <FooterForm>

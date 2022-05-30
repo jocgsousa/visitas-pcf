@@ -715,6 +715,7 @@ class Home extends Component {
       filterSelected: filter,
     });
   };
+
   renderItem = ({ item }) => {
     const { navigation } = this.props;
 

@@ -125,7 +125,7 @@ export const InputUrl = styled.TextInput`
   padding-right: 10px;
   font-size: 20px;
   background: #ccc;
-  color: #ffff;
+  color: #666;
 `;
 
 export const FooterForm = styled(GestureHandlerRootView)`
