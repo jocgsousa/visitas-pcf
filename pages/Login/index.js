@@ -55,7 +55,10 @@ class Home extends Component {
 
   componentDidMount = async () => {
     const { api } = this.state;
+
     const { navigation } = this.props;
+
+    this.setState({ loading: true });
 
     navigation.setOptions({
       title: "Sistema de visitas PCF",
@@ -92,6 +95,14 @@ class Home extends Component {
     this.setState({
       api: dataParsed.url,
     });
+
+    const isUser = await AsyncStorage.getItem("user");
+
+    if (isUser) {
+      navigation.navigate("Home");
+    }
+
+    this.setState({ loading: false });
   };
 
   handleModal = () => {
@@ -115,7 +126,10 @@ class Home extends Component {
 
     await axios
       .post(`${api}/create-session`, data)
-      .then(() => {
+      .then(async (response) => {
+        const data = JSON.stringify(response.data);
+        await AsyncStorage.setItem("user", data);
+
         navigation.navigate("Home");
       })
       .catch((error) => {
@@ -127,7 +141,7 @@ class Home extends Component {
           Alert.alert("Usuário", error.response.data.error);
         }
 
-        if (!error.response) {
+        if (!error.response.data) {
           Alert.alert(
             "Conexão",
             "Falha ao realizar conexão com o servidor, tente novamente mais tarde."

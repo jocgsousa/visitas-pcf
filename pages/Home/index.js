@@ -651,7 +651,10 @@ class Home extends Component {
             style: "destructive",
             // If the user confirmed, then we dispatch the action we blocked earlier
             // This will continue the action that had triggered the removal of the screen
-            onPress: () => navigation.dispatch(e.data.action),
+            onPress: async () => {
+              await AsyncStorage.removeItem("user"),
+                navigation.dispatch(e.data.action);
+            },
           },
         ]
       );
