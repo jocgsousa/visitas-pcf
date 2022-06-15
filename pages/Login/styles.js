@@ -42,8 +42,8 @@ export const ContainerTitle = styled.View`
   width: 100%;
   align-items: center;
   justify-content: center;
-  top: 0;
-  margin-top: 35%;
+  top: 100px;
+  /* margin-top: 35%; */
   position: absolute;
 `;
 
@@ -161,4 +161,22 @@ export const TextButtonSubmit = styled.Text`
   text-transform: uppercase;
   color: #fff;
   font-size: 17px;
+`;
+
+export const TitleAlert = styled.Text`
+  font-size: 15px;
+  color: red;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-right: 5px;
+`;
+
+export const ViewAlert = styled.View`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  position: absolute;
+  top: -50px;
 `;

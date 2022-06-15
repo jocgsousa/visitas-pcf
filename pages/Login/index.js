@@ -40,6 +40,8 @@ import {
   Title,
   ContainerConfig,
   ContainerAnimation,
+  TitleAlert,
+  ViewAlert,
 } from "./styles";
 
 window.navigator.userAgent = "react-native";
@@ -90,7 +92,7 @@ class Home extends Component {
 
     const data = await AsyncStorage.getItem("api");
 
-    const dataParsed = JSON.parse(data);
+    const dataParsed = data ? JSON.parse(data) : "";
 
     this.setState({
       api: dataParsed.url,
@@ -199,6 +201,7 @@ class Home extends Component {
                 placeholder="URL"
                 value={api}
                 onChangeText={(e) => this.setState({ api: e })}
+                autoCapitalize="none"
               />
 
               <FooterForm>
@@ -232,6 +235,12 @@ class Home extends Component {
           </HeaderForm> */}
 
           <BodyForm>
+            {!api && (
+              <ViewAlert>
+                <TitleAlert>Para ter acesso configure clicando em</TitleAlert>
+                <Icon name="settings" size={20} color="#336666" />
+              </ViewAlert>
+            )}
             <Input
               placeholder="Nick"
               onChangeText={(e) => this.setState({ nick: e })}
