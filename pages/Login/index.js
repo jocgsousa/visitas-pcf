@@ -186,6 +186,7 @@ class Home extends Component {
       });
 
       Animated.parallel([
+        // Animation fadeIn and FadeOut
         Animated.timing(this.state.animateOpacity, {
           toValue: 1,
           duration: 1000,
@@ -200,6 +201,30 @@ class Home extends Component {
             }).start();
           }
         }),
+
+        // Animation Move Down and Up
+        Animated.timing(this.state.animateMove, {
+          toValue: 30,
+          duration: 1000,
+          useNativeDriver: true,
+        }).start(({ finished }) => {
+          console.log(finished);
+          if (finished) {
+            Animated.timing(this.state.animateMove, {
+              toValue: -30,
+              delay: 4800,
+              duration: 1000,
+              useNativeDriver: true,
+            }).start();
+
+            Animated.timing(this.state.animateOpacity, {
+              toValue: 0,
+              delay: 4700,
+              duration: 1000,
+              useNativeDriver: true,
+            }).start();
+          }
+        }),
       ]);
     });
 
@@ -209,6 +234,7 @@ class Home extends Component {
       });
 
       Animated.parallel([
+        // Animation fadeIn and FadeOut
         Animated.timing(this.state.animateOpacity, {
           toValue: 1,
           duration: 1000,
@@ -218,6 +244,30 @@ class Home extends Component {
             Animated.timing(this.state.animateOpacity, {
               toValue: 0,
               delay: 5000,
+              duration: 1000,
+              useNativeDriver: true,
+            }).start();
+          }
+        }),
+
+        // Animation Move Down and Up
+        Animated.timing(this.state.animateMove, {
+          toValue: 30,
+          duration: 1000,
+          useNativeDriver: true,
+        }).start(({ finished }) => {
+          console.log(finished);
+          if (finished) {
+            Animated.timing(this.state.animateMove, {
+              toValue: -30,
+              delay: 4800,
+              duration: 1000,
+              useNativeDriver: true,
+            }).start();
+
+            Animated.timing(this.state.animateOpacity, {
+              toValue: 0,
+              delay: 4700,
               duration: 1000,
               useNativeDriver: true,
             }).start();
@@ -233,23 +283,20 @@ class Home extends Component {
 
     return (
       <Container>
-        {connected ? (
-          <ViewStatus
-            style={{
-              opacity: this.state.animateOpacity,
-            }}
-          >
-            <StatusConnection connect={connected}>ONLINE</StatusConnection>
-          </ViewStatus>
-        ) : (
-          <ViewStatus
-            style={{
-              opacity: this.state.animateOpacity,
-            }}
-          >
-            <StatusConnection connect={connected}>OFFLINE</StatusConnection>
-          </ViewStatus>
-        )}
+        <ViewStatus
+          style={{
+            opacity: this.state.animateOpacity,
+            transform: [
+              {
+                translateY: this.state.animateMove,
+              },
+            ],
+          }}
+        >
+          <StatusConnection connect={connected}>
+            {connected ? "ONLINE" : "OFFLINE"}
+          </StatusConnection>
+        </ViewStatus>
 
         <Modal isVisible={modalVisible}>
           <View
@@ -311,6 +358,7 @@ class Home extends Component {
               style={{
                 resizeMode: "contain",
                 width: 100,
+                bottom: -40,
               }}
             />
           </HeaderForm>

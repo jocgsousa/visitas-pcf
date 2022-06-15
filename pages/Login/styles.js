@@ -125,6 +125,7 @@ export const FooterForm = styled(GestureHandlerRootView)`
   width: 100%;
   align-items: center;
   justify-content: center;
+  z-index: 999;
 `;
 
 export const Button = styled(RectButton)`
@@ -188,6 +189,8 @@ export const StatusConnection = styled.Text`
 export const ViewStatus = styled(Animated.View)`
   display: flex;
   align-items: center;
+  z-index: 999;
+  top: -30px;
 `;
 
 export const Image = styled.Image`
