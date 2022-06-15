@@ -1,4 +1,5 @@
 import React from "react";
+import { Animated } from "react-native";
 import styled from "styled-components/native";
 
 import {
@@ -42,9 +43,9 @@ export const ContainerTitle = styled.View`
   width: 100%;
   align-items: center;
   justify-content: center;
-  top: 100px;
+  /* top: 30px; */
   /* margin-top: 35%; */
-  position: absolute;
+  position: relative;
 `;
 
 export const Title = styled.Text`
@@ -74,9 +75,9 @@ export const ButtonClose = styled.Pressable`
 export const Form = styled.View`
   /* elevation: 7; */
   border-radius: 10px;
-  height: 80%;
+  height: 50%;
   /* flex: 1; */
-  margin-top: 0%;
+  margin-top: -5%;
   margin-right: 10px;
   margin-left: 10px;
   margin-bottom: 10px;
@@ -87,15 +88,7 @@ export const Form = styled.View`
   z-index: 2;
 `;
 
-export const HeaderForm = styled.View`
-  top: 0;
-  margin-top: 30px;
-  position: absolute;
-  /* border: 1px solid red; */
-  width: 100%;
-  align-items: center;
-  justify-content: center;
-`;
+export const HeaderForm = styled.View``;
 
 export const TitleForm = styled.Text`
   color: #333;
@@ -179,4 +172,25 @@ export const ViewAlert = styled.View`
   flex-direction: row;
   position: absolute;
   top: -50px;
+`;
+
+export const StatusConnection = styled.Text`
+  background-color: ${(props) => (props.connect ? "#009966" : "#777")};
+  color: ${(props) => (props.connect ? "#fff" : "#fff")};
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 10px 10px 10px 10px;
+`;
+
+export const ViewStatus = styled(Animated.View)`
+  display: flex;
+  align-items: center;
+`;
+
+export const Image = styled.Image`
+  width: 200px;
+  height: 200px;
 `;

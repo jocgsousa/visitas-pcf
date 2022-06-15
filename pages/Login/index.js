@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-import { Alert, View } from "react-native";
+import { Alert, View, Animated } from "react-native";
 
 import Icon from "react-native-vector-icons/SimpleLineIcons";
 
@@ -10,7 +10,7 @@ import Modal from "react-native-modal";
 
 import LottieView from "lottie-react-native";
 
-import { io } from "socket.io-client";
+import { io } from "socket.io-client/dist/socket.io";
 
 import axios from "axios";
 
@@ -23,8 +23,8 @@ import animationLoading from "./assets/animations/loading.json";
 import {
   Container,
   Form,
-  // HeaderForm,
-  // TitleForm,
+  HeaderForm,
+  TitleForm,
   BodyForm,
   Input,
   InputUrl,
@@ -42,9 +42,14 @@ import {
   ContainerAnimation,
   TitleAlert,
   ViewAlert,
+  StatusConnection,
+  ViewStatus,
+  Image,
 } from "./styles";
 
 window.navigator.userAgent = "react-native";
+
+import logo from "./assets/images/logo.png";
 
 class Home extends Component {
   state = {
@@ -53,11 +58,16 @@ class Home extends Component {
     nick: "",
     password: "",
     api: "",
+    connected: false,
+    animateOpacity: 0,
+    animateMove: 0,
   };
 
   componentDidMount = async () => {
-    const { api } = this.state;
-
+    this.setState({
+      animateOpacity: new Animated.Value(0),
+      animateMove: new Animated.Value(0),
+    });
     const { navigation } = this.props;
 
     this.setState({ loading: true });
@@ -82,14 +92,6 @@ class Home extends Component {
       ),
     });
 
-    const socket = io(api);
-
-    socket.connect();
-
-    socket.on("connection", (socket) => {
-      console.log(socket.id); // x8WIv7-mJelg7on_ALbx
-    });
-
     const data = await AsyncStorage.getItem("api");
 
     const dataParsed = data ? JSON.parse(data) : "";
@@ -105,6 +107,8 @@ class Home extends Component {
     }
 
     this.setState({ loading: false });
+
+    this.handleSocketConnection();
   };
 
   handleModal = () => {
@@ -171,11 +175,82 @@ class Home extends Component {
     }
   };
 
+  handleSocketConnection = async () => {
+    const { api } = this.state;
+
+    const socket = io(api);
+
+    socket.on("connect", (data) => {
+      this.setState({
+        connected: true,
+      });
+
+      Animated.parallel([
+        Animated.timing(this.state.animateOpacity, {
+          toValue: 1,
+          duration: 1000,
+          useNativeDriver: true,
+        }).start(({ finished }) => {
+          if (finished) {
+            Animated.timing(this.state.animateOpacity, {
+              toValue: 0,
+              delay: 5000,
+              duration: 1000,
+              useNativeDriver: true,
+            }).start();
+          }
+        }),
+      ]);
+    });
+
+    socket.on("disconnect", () => {
+      this.setState({
+        connected: false,
+      });
+
+      Animated.parallel([
+        Animated.timing(this.state.animateOpacity, {
+          toValue: 1,
+          duration: 1000,
+          useNativeDriver: true,
+        }).start(({ finished }) => {
+          if (finished) {
+            Animated.timing(this.state.animateOpacity, {
+              toValue: 0,
+              delay: 5000,
+              duration: 1000,
+              useNativeDriver: true,
+            }).start();
+          }
+        }),
+      ]);
+    });
+  };
+
   render() {
-    const { modalVisible, loading, api, nick, password } = this.state;
+    const { modalVisible, loading, api, nick, password, connected } =
+      this.state;
 
     return (
       <Container>
+        {connected ? (
+          <ViewStatus
+            style={{
+              opacity: this.state.animateOpacity,
+            }}
+          >
+            <StatusConnection connect={connected}>ONLINE</StatusConnection>
+          </ViewStatus>
+        ) : (
+          <ViewStatus
+            style={{
+              opacity: this.state.animateOpacity,
+            }}
+          >
+            <StatusConnection connect={connected}>OFFLINE</StatusConnection>
+          </ViewStatus>
+        )}
+
         <Modal isVisible={modalVisible}>
           <View
             style={{
@@ -230,9 +305,15 @@ class Home extends Component {
         </Modal>
 
         <Form>
-          {/* <HeaderForm>
-            <TitleForm>LOGIN</TitleForm>
-          </HeaderForm> */}
+          <HeaderForm>
+            <Image
+              source={logo}
+              style={{
+                resizeMode: "contain",
+                width: 100,
+              }}
+            />
+          </HeaderForm>
 
           <BodyForm>
             {!api && (
@@ -245,6 +326,7 @@ class Home extends Component {
               placeholder="Nick"
               onChangeText={(e) => this.setState({ nick: e })}
               value={nick}
+              autoCapitalize="none"
             />
             <Input
               placeholder="Password"
