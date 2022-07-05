@@ -172,7 +172,7 @@ export const ViewAlert = styled.View`
   justify-content: center;
   flex-direction: row;
   position: absolute;
-  top: -50px;
+  top: -10px;
 `;
 
 export const StatusConnection = styled.Text`

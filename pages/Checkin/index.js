@@ -176,8 +176,8 @@ class Checkin extends Component {
               <Icon name="home" size={20} color="#00cc99" />
             </ColIcon>
             <TextInfo>
-              {item.endereco.logradouro} {item.endereco.numero}{" "}
-              {item.endereco.bairro}
+              {item.user.endereco.logradouro} {item.user.endereco.numero}
+              {item.user.endereco.bairro}
             </TextInfo>
           </ColInfo>
 

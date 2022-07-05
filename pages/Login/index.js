@@ -153,6 +153,8 @@ class Home extends Component {
             "Falha ao realizar conexão com o servidor, tente novamente mais tarde."
           );
         }
+
+        console.log(error.response.data);
       });
 
     this.setState({ loading: false });
@@ -381,6 +383,8 @@ class Home extends Component {
               secureTextEntry={true}
               onChangeText={(e) => this.setState({ password: e })}
               value={password}
+              returnKeyType="go"
+              onSubmitEditing={() => this.handleSigin()}
             />
           </BodyForm>
 

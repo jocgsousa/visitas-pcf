@@ -36,6 +36,7 @@ import {
   RootView,
   InfoStatusSaved,
 } from "./styles";
+import axios from "axios";
 
 class Home extends Component {
   state = {
@@ -92,31 +93,7 @@ class Home extends Component {
       );
     });
 
-    const { visitas } = this.state;
-
-    const localStorageVisitas = await AsyncStorage.getItem("visitas");
-
-    if (localStorageVisitas) {
-      const visitasparser = JSON.parse(localStorageVisitas);
-
-      const newStateVisitas = [];
-
-      visitas.forEach((visita) => {
-        const isCheked = visitasparser.find(
-          (v) => Number(v.id) === Number(visita.id)
-        );
-
-        if (isCheked) {
-          newStateVisitas.push(isCheked);
-        } else {
-          newStateVisitas.push(visita);
-        }
-      });
-
-      this.setState({
-        visitas: newStateVisitas,
-      });
-    }
+    this.handleListVisitas();
 
     this.setState({ loading: false });
 
@@ -126,16 +103,70 @@ class Home extends Component {
   checkNet = async () => {
     const time = setInterval(async () => {
       const response = await NetInfo.fetch();
+
       // console.log(response.isConnected);
       if (response.isConnected) {
         // console.log("Conectado");
       } else {
-        // console.log("Desconectado");
+        console.log("Desconectado.");
       }
     }, 1000);
 
     this.setState({
       time,
+    });
+  };
+
+  handleSaveStorage = async (data) => {
+    if (data) {
+      try {
+        await AsyncStorage.setItem("visitas", JSON.stringify(data));
+        console.log("Salvas em localStorage");
+      } catch (error) {}
+    }
+  };
+
+  handleListVisitas = async () => {
+    const api = await AsyncStorage.getItem("api");
+    const user = await AsyncStorage.getItem("user");
+    const apiParsed = JSON.parse(api);
+    const userParsed = JSON.parse(user);
+
+    const url = apiParsed.url;
+
+    this.setState({
+      loading: true,
+    });
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userParsed.token}`,
+      },
+    };
+
+    await axios
+      .get(`${url}/visita`, config)
+      .then(async (response) => {
+        this.setState({
+          visitas: response.data,
+          loading: false,
+        });
+
+        this.handleSaveStorage(response.data);
+      })
+      .catch((err) => {
+        this.setState({
+          loading: false,
+        });
+
+        this.handleListVisitasLocal();
+      });
+  };
+
+  handleListVisitasLocal = async () => {
+    const visitas = await AsyncStorage.getItem("visitas");
+    this.setState({
+      visitas: JSON.parse(visitas),
     });
   };
 
@@ -178,8 +209,8 @@ class Home extends Component {
               <Icon name="home" size={20} color="#00cc99" />
             </ColIcon>
             <TextInfo>
-              {item.endereco.logradouro} {item.endereco.numero}{" "}
-              {item.endereco.bairro}
+              {item.user.endereco.logradouro} {item.user.endereco.numero}
+              {item.user.endereco.bairro}
             </TextInfo>
           </ColInfo>
 
