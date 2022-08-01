@@ -120,10 +120,26 @@ class Home extends Component {
   handleSaveStorage = async (data) => {
     if (data) {
       try {
-        await AsyncStorage.setItem("visitas", JSON.stringify(data));
+        const newArray = [];
+        const localVisits = await AsyncStorage.getItem("visitas");
+        const visitas = JSON.parse(localVisits);
+
+        for (let index = 0; index < data.length; index++) {
+          const element = data[index];
+          const isSaved = visitas.find((v) => v.id === element.id);
+          if (isSaved) {
+            newArray.push(isSaved);
+          } else {
+            newArray.push(element);
+          }
+        }
+
+        await AsyncStorage.setItem("visitas", JSON.stringify(newArray));
         console.log("Salvas em localStorage");
       } catch (error) {}
     }
+
+    this.handleListVisitasLocal();
   };
 
   handleListVisitas = async () => {
@@ -148,7 +164,6 @@ class Home extends Component {
       .get(`${url}/visita`, config)
       .then(async (response) => {
         this.setState({
-          visitas: response.data,
           loading: false,
         });
 
@@ -161,6 +176,8 @@ class Home extends Component {
 
         this.handleListVisitasLocal();
       });
+
+    this.handleListVisitasLocal();
   };
 
   handleListVisitasLocal = async () => {
@@ -186,7 +203,11 @@ class Home extends Component {
     const { navigation } = this.props;
 
     return (
-      <Item onPress={() => navigation.navigate("Checkin", item)}>
+      <Item
+        onPress={() => {
+          navigation.navigate("Checkin", item);
+        }}
+      >
         <Status complete={item.complete}></Status>
         <RowInfo>
           <ColInfo width="100%">
@@ -199,6 +220,7 @@ class Home extends Component {
               )}
               {!item.user.sexo && <Icon name="user" size={20} />}
             </ColIcon>
+
             <TextInfo>
               {item.user.name}{" "}
               {item.user.idade && ` - IDADE: ${item.user.idade}`}
@@ -209,8 +231,9 @@ class Home extends Component {
               <Icon name="home" size={20} color="#00cc99" />
             </ColIcon>
             <TextInfo>
-              {item.user.endereco.logradouro} {item.user.endereco.numero}
-              {item.user.endereco.bairro}
+              {item.user.endereco && item.user.endereco.logradouro}{" "}
+              {item.user.endereco && item.user.endereco.numero}
+              {item.user.endereco && item.user.endereco.bairro}
             </TextInfo>
           </ColInfo>
 

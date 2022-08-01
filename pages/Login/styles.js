@@ -95,14 +95,19 @@ export const TitleForm = styled.Text`
   font-size: 20px;
 `;
 
-export const BodyForm = styled.View``;
+export const BodyForm = styled.View`
+  height: 70%;
+  /* border: 2px solid red; */
+  margin-top: -20px;
+  padding-bottom: 10px;
+`;
 
 export const Input = styled.TextInput`
   elevation: 1;
-  width: 300px;
-  height: 50px;
+  width: 250px;
+  height: 40px;
   border-radius: 20px;
-  margin-top: 20px;
+  margin-bottom: 10px;
   padding-left: 10px;
   font-size: 20px;
   background: #fff;
@@ -110,10 +115,11 @@ export const Input = styled.TextInput`
 
 export const InputUrl = styled.TextInput`
   elevation: 1;
-  width: 300px;
-  height: 50px;
+  width: 250px;
+  height: 40px;
   border-radius: 20px;
   margin-top: 10px;
+  margin-bottom: 10px;
   padding-left: 10px;
   padding-right: 10px;
   font-size: 20px;
@@ -121,21 +127,21 @@ export const InputUrl = styled.TextInput`
   color: #666;
 `;
 
-export const FooterForm = styled(GestureHandlerRootView)`
+export const FooterForm = styled.View`
   width: 100%;
   align-items: center;
   justify-content: center;
   z-index: 999;
 `;
 
-export const Button = styled(RectButton)`
-  width: 300px;
+export const Button = styled.Pressable`
+  width: 250px;
   align-items: center;
   justify-content: center;
-  height: 50px;
+  height: 40px;
   border-radius: 20px;
   elevation: 1;
-  margin-top: 20px;
+  /* margin-top: 20px; */
   background: #00cccc;
 `;
 
@@ -172,7 +178,8 @@ export const ViewAlert = styled.View`
   justify-content: center;
   flex-direction: row;
   position: absolute;
-  top: -10px;
+  top: -20%;
+  left: -5%;
 `;
 
 export const StatusConnection = styled.Text`

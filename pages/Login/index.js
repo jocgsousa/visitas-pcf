@@ -279,6 +279,10 @@ class Home extends Component {
     });
   };
 
+  handleAlert() {
+    Alert.alert("ol", "ok");
+  }
+
   render() {
     const { modalVisible, loading, api, nick, password, connected } =
       this.state;
@@ -360,7 +364,7 @@ class Home extends Component {
               style={{
                 resizeMode: "contain",
                 width: 100,
-                bottom: -40,
+                bottom: 0,
               }}
             />
           </HeaderForm>
@@ -377,6 +381,10 @@ class Home extends Component {
               onChangeText={(e) => this.setState({ nick: e })}
               value={nick}
               autoCapitalize="none"
+              returnKeyType="next"
+              onSubmitEditing={() => {
+                this.secondTextInput.focus();
+              }}
             />
             <Input
               placeholder="Password"
@@ -385,14 +393,14 @@ class Home extends Component {
               value={password}
               returnKeyType="go"
               onSubmitEditing={() => this.handleSigin()}
+              ref={(input) => {
+                this.secondTextInput = input;
+              }}
             />
-          </BodyForm>
-
-          <FooterForm>
-            <Button onPress={() => this.handleSigin()}>
+            <Button onPress={this.handleSigin}>
               <TextButtonSubmit>Entrar</TextButtonSubmit>
             </Button>
-          </FooterForm>
+          </BodyForm>
         </Form>
 
         <ContainerAnimation>

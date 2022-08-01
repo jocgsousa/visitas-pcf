@@ -100,43 +100,24 @@ class Checkin extends Component {
 
       let location = await Location.getCurrentPositionAsync({});
 
-      if (visitas) {
-        console.log("Tem visitas");
+      const newStorage = visitas.map((visit) =>
+        visit.id === visita.id
+          ? {
+              ...visita,
+              atividade,
+              obs,
+              complete: true,
+              latitute: location.coords.latitude,
+              longitude: location.coords.longitude,
+            }
+          : visit
+      );
 
-        const novavisita = {
-          ...visita,
-          atividade,
-          obs,
-          complete: true,
-          latitute: location.coords.latitude,
-          longitude: location.coords.longitude,
-        };
+      await AsyncStorage.setItem("visitas", JSON.stringify(newStorage));
 
-        const visitasSaved = [...visitas, novavisita];
-
-        await AsyncStorage.setItem("visitas", JSON.stringify(visitasSaved));
-      } else {
-        console.log("Sem visitas");
-
-        const localStorageVisitas = [];
-
-        const novavisita = {
-          ...visita,
-          atividade,
-          obs,
-          complete: true,
-          latitute: location.coords.latitude,
-          longitude: location.coords.longitude,
-        };
-        localStorageVisitas.push(novavisita);
-
-        console.log(localStorageVisitas);
-
-        await AsyncStorage.setItem(
-          "visitas",
-          JSON.stringify(localStorageVisitas)
-        );
-      }
+      this.setState({
+        complete: true,
+      });
     } catch (error) {
       Alert.alert(
         "Falha ao salvar checkin",
@@ -176,8 +157,9 @@ class Checkin extends Component {
               <Icon name="home" size={20} color="#00cc99" />
             </ColIcon>
             <TextInfo>
-              {item.user.endereco.logradouro} {item.user.endereco.numero}
-              {item.user.endereco.bairro}
+              {item.user.endereco && item.user.endereco.logradouro}{" "}
+              {item.user.endereco && item.user.endereco.numero}
+              {item.user.endereco && item.user.endereco.bairro}
             </TextInfo>
           </ColInfo>
 
