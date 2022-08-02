@@ -68,12 +68,14 @@ class Checkin extends Component {
       headerRight: () => null,
     });
 
-    const visitasSaved = await AsyncStorage.getItem("visitas");
+    const local = await AsyncStorage.getItem("visitas");
+    const localVisits = JSON.parse(local);
+    const visits = localVisits.visits;
 
     this.setState({
       historico: route.params.historico,
       visita: route.params,
-      visitas: JSON.parse(visitasSaved),
+      visitas: visits,
       atividade: route.params.atividade,
       obs: route.params.obs,
       complete: route.params.complete,
@@ -109,11 +111,20 @@ class Checkin extends Component {
               complete: true,
               latitude: location.coords.latitude,
               longitude: location.coords.longitude,
+              register_date: new Date(),
             }
           : visit
       );
 
-      await AsyncStorage.setItem("visitas", JSON.stringify(newStorage));
+      const local = await AsyncStorage.getItem("visitas");
+      const localVisits = JSON.parse(local);
+
+      const newLocalVisits = {
+        user: localVisits.user,
+        visits: newStorage,
+      };
+
+      await AsyncStorage.setItem("visitas", JSON.stringify(newLocalVisits));
 
       this.setState({
         complete: true,

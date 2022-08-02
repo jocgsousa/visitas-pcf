@@ -47,7 +47,7 @@ class Home extends Component {
 
   async componentDidMount() {
     const { navigation } = this.props;
-    await AsyncStorage.setItem("visitas", JSON.stringify([]));
+    // await AsyncStorage.setItem("visitas", JSON.stringify([]));
 
     this.setState({ loading: true });
 
@@ -123,26 +123,33 @@ class Home extends Component {
   };
 
   handleSaveStorage = async (data) => {
-    if (data) {
-      try {
-        const newArray = [];
-        const localVisits = await AsyncStorage.getItem("visitas");
-        const visitas = JSON.parse(localVisits);
+    try {
+      const newArray = [];
+      const local = await AsyncStorage.getItem("visitas");
+      const localVisits = JSON.parse(local);
+      const visits = localVisits.visits;
 
-        for (let index = 0; index < data.length; index++) {
-          const element = data[index];
-          const isSaved = visitas.find((v) => v.id === element.id);
-          if (isSaved) {
-            newArray.push(isSaved);
-          } else {
-            newArray.push(element);
-          }
+      for (let index = 0; index < data.length; index++) {
+        const element = data[index];
+        const isSaved = visits.find((v) => v.id === element.id);
+        if (isSaved) {
+          newArray.push(isSaved);
+        } else {
+          newArray.push(element);
         }
+      }
 
-        await AsyncStorage.setItem("visitas", JSON.stringify(newArray));
-        console.log("Salvas em localStorage");
-      } catch (error) {}
-    }
+      const user = await AsyncStorage.getItem("user");
+      const nick = JSON.parse(user);
+
+      const storage = {
+        user: nick.user.nick,
+        visits: newArray,
+      };
+
+      await AsyncStorage.setItem("visitas", JSON.stringify(storage));
+      console.log("Salvas em localStorage");
+    } catch (error) {}
 
     this.handleListVisitasLocal();
   };
@@ -152,8 +159,12 @@ class Home extends Component {
     const user = await AsyncStorage.getItem("user");
     const apiParsed = JSON.parse(api);
     const userParsed = JSON.parse(user);
-    const { visitas } = this.state;
+
     const url = apiParsed.url;
+
+    const local = await AsyncStorage.getItem("visitas");
+    const localVisitas = JSON.parse(local);
+    const visitas = localVisitas.visits;
 
     const config = {
       headers: {
@@ -167,7 +178,7 @@ class Home extends Component {
     await axios
       .put(`${url}/visita`, data, config)
       .then(async (response) => {
-        console.log(response.data.message);
+        // console.log(response.data.visitas);
       })
       .catch((err) => {
         console.log(err.response.data.error);
@@ -198,6 +209,7 @@ class Home extends Component {
         this.setState({
           loading: false,
         });
+        // console.log(response.data);
         this.handleSaveStorage(response.data);
       })
       .catch((err) => {
@@ -212,9 +224,11 @@ class Home extends Component {
   };
 
   handleListVisitasLocal = async () => {
-    const visitas = await AsyncStorage.getItem("visitas");
+    const local = await AsyncStorage.getItem("visitas");
+    const localVisits = JSON.parse(local);
+
     this.setState({
-      visitas: JSON.parse(visitas),
+      visitas: localVisits.visits,
     });
   };
 
@@ -313,7 +327,8 @@ class Home extends Component {
               <Icon name="chevron-left" size={20} color="#fff" />
             </BeforeButton>
             <List
-              data={visitas.sort((a, b) => b.id - a.id)}
+              // data={visitas.sort((a, b) => b.id - a.id)}
+              data={visitas}
               renderItem={this.renderItem}
               keyExtractor={(item) => item.id}
             />
