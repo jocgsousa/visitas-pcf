@@ -107,7 +107,7 @@ class Checkin extends Component {
               atividade,
               obs,
               complete: true,
-              latitute: location.coords.latitude,
+              latitude: location.coords.latitude,
               longitude: location.coords.longitude,
             }
           : visit

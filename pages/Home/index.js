@@ -47,6 +47,7 @@ class Home extends Component {
 
   async componentDidMount() {
     const { navigation } = this.props;
+    await AsyncStorage.setItem("visitas", JSON.stringify([]));
 
     this.setState({ loading: true });
 
@@ -98,6 +99,8 @@ class Home extends Component {
     this.setState({ loading: false });
 
     this.checkNet();
+
+    this.uploadVisitas();
   }
 
   checkNet = async () => {
@@ -110,7 +113,9 @@ class Home extends Component {
       } else {
         console.log("Desconectado.");
       }
-    }, 1000);
+      this.uploadVisitas();
+      this.handleListVisitasLocal();
+    }, 10000);
 
     this.setState({
       time,
@@ -142,6 +147,33 @@ class Home extends Component {
     this.handleListVisitasLocal();
   };
 
+  uploadVisitas = async () => {
+    const api = await AsyncStorage.getItem("api");
+    const user = await AsyncStorage.getItem("user");
+    const apiParsed = JSON.parse(api);
+    const userParsed = JSON.parse(user);
+    const { visitas } = this.state;
+    const url = apiParsed.url;
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userParsed.token}`,
+      },
+    };
+    const data = {
+      visitas,
+    };
+
+    await axios
+      .put(`${url}/visita`, data, config)
+      .then(async (response) => {
+        console.log(response.data.message);
+      })
+      .catch((err) => {
+        console.log(err.response.data.error);
+      });
+  };
+
   handleListVisitas = async () => {
     const api = await AsyncStorage.getItem("api");
     const user = await AsyncStorage.getItem("user");
@@ -166,7 +198,6 @@ class Home extends Component {
         this.setState({
           loading: false,
         });
-
         this.handleSaveStorage(response.data);
       })
       .catch((err) => {
@@ -282,7 +313,7 @@ class Home extends Component {
               <Icon name="chevron-left" size={20} color="#fff" />
             </BeforeButton>
             <List
-              data={visitas}
+              data={visitas.sort((a, b) => b.id - a.id)}
               renderItem={this.renderItem}
               keyExtractor={(item) => item.id}
             />
