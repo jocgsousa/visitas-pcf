@@ -179,6 +179,23 @@ class Home extends Component {
       .put(`${url}/visita`, data, config)
       .then(async (response) => {
         // console.log(response.data.visitas);
+        const newStorage = [];
+
+        const uploaded = response.data.visitas;
+
+        uploaded.forEach((visit) => {
+          const isReg = visitas.find((v) => v.id === visit.id);
+          if (isReg) {
+            newStorage.push({ ...isReg, uploaded: true });
+          }
+        });
+
+        const localstorage = {
+          user: userParsed.nick,
+          visits: newStorage,
+        };
+
+        await AsyncStorage.setItem("visitas", JSON.stringify(localstorage));
       })
       .catch((err) => {
         console.log(err.response.data.error);
@@ -298,7 +315,7 @@ class Home extends Component {
         </RowInfo>
 
         <InfoStatusSaved>
-          {item.save ? (
+          {item.uploaded ? (
             <Icon3 name="checkmark-circle" color="#009966" size={20} />
           ) : (
             <Icon3 name="alert-circle" color="#777777" size={20} />
