@@ -117,9 +117,10 @@ class Home extends Component {
         // console.log("Conectado");
       } else {
         // console.log("Desconectado.");
+        this.handleListVisitasLocal();
       }
       this.uploadVisitas();
-      this.handleListVisitasLocal();
+      this.handleListVisitas(true);
     }, 10000);
 
     this.setState({
@@ -142,9 +143,9 @@ class Home extends Component {
         (local) => local.id === visit.id
       );
 
-      if (isLocal.length) {
+      if (isLocal.length > 0) {
         console.log("Local Salvo");
-        newStorage.push(isLocal[0]);
+        newStorage.push({ ...isLocal[0], visit });
       } else {
         console.log("Local nao Salvo");
         newStorage.push(visit);
@@ -189,13 +190,13 @@ class Home extends Component {
 
     await axios
       .put(`${url}/visita`, data, config)
-      .then((response) => {})
+      .then(() => {})
       .catch((err) => {
         // console.log(err.response.data.error);
       });
   };
 
-  handleListVisitas = async () => {
+  handleListVisitas = async (isLoading) => {
     const api = await AsyncStorage.getItem("api");
     const user = await AsyncStorage.getItem("user");
     const apiParsed = JSON.parse(api);
@@ -203,9 +204,15 @@ class Home extends Component {
 
     const url = apiParsed.url;
 
-    this.setState({
-      loading: true,
-    });
+    if (isLoading) {
+      this.setState({
+        loading: false,
+      });
+    } else {
+      this.setState({
+        loading: true,
+      });
+    }
 
     const config = {
       headers: {
@@ -312,13 +319,13 @@ class Home extends Component {
           </ColInfo>
         </RowInfo>
 
-        <InfoStatusSaved>
+        {/* <InfoStatusSaved>
           {item.uploaded ? (
             <Icon3 name="checkmark-circle" color="#009966" size={20} />
           ) : (
             <Icon3 name="alert-circle" color="#777777" size={20} />
           )}
-        </InfoStatusSaved>
+        </InfoStatusSaved> */}
       </Item>
     );
   };
@@ -335,12 +342,12 @@ class Home extends Component {
           </ViewContainerLoading>
         ) : (
           <ViewContainer>
-            <AfterButton marginTop={`${windowHeight - 200}px`}>
+            {/* <AfterButton marginTop={`${windowHeight - 200}px`}>
               <Icon name="chevron-right" size={20} color="#fff" />
             </AfterButton>
             <BeforeButton marginTop={`${windowHeight - 140}px`}>
               <Icon name="chevron-left" size={20} color="#fff" />
-            </BeforeButton>
+            </BeforeButton> */}
             <List
               // data={visitas.sort((a, b) => b.id - a.id)}
               data={visitas}
