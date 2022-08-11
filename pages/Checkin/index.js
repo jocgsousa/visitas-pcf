@@ -54,7 +54,8 @@ class Checkin extends Component {
 
   async componentDidMount() {
     const { navigation, route } = this.props;
-
+    const user = await AsyncStorage.getItem("user");
+    const nick = JSON.parse(user);
     const name = route.params.user.name.split(" ");
 
     navigation.setOptions({
@@ -68,7 +69,7 @@ class Checkin extends Component {
       headerRight: () => null,
     });
 
-    const local = await AsyncStorage.getItem("visitas");
+    const local = await AsyncStorage.getItem(`${nick.user.nick}`);
     const localVisits = JSON.parse(local);
     const visits = localVisits.visits;
 
@@ -84,6 +85,8 @@ class Checkin extends Component {
 
   handleCheckin = async () => {
     const { atividade, visita, visitas, obs } = this.state;
+    const user = await AsyncStorage.getItem("user");
+    const nick = JSON.parse(user);
 
     this.setState({
       loading: true,
@@ -116,7 +119,7 @@ class Checkin extends Component {
           : visit
       );
 
-      const local = await AsyncStorage.getItem("visitas");
+      const local = await AsyncStorage.getItem(`${nick.user.nick}`);
       const localVisits = JSON.parse(local);
 
       const newLocalVisits = {
@@ -124,7 +127,10 @@ class Checkin extends Component {
         visits: newStorage,
       };
 
-      await AsyncStorage.setItem("visitas", JSON.stringify(newLocalVisits));
+      await AsyncStorage.setItem(
+        `${nick.user.nick}`,
+        JSON.stringify(newLocalVisits)
+      );
 
       this.setState({
         complete: true,

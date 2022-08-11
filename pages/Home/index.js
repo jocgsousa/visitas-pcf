@@ -47,11 +47,8 @@ class Home extends Component {
 
   async componentDidMount() {
     const { navigation } = this.props;
-    // await AsyncStorage.setItem("visitas", JSON.stringify([]));
 
     this.setState({ loading: true });
-
-    // await AsyncStorage.removeItem("visitas");
 
     navigation.setOptions({
       title: "VISITAS",
@@ -101,6 +98,14 @@ class Home extends Component {
     this.checkNet();
 
     this.uploadVisitas();
+
+    // const user = await AsyncStorage.getItem("user");
+
+    // const nick = JSON.parse(user);
+
+    // const visits = await AsyncStorage.remove(`${nick.user.nick}`);
+
+    // console.log(visits);
   }
 
   checkNet = async () => {
@@ -111,7 +116,7 @@ class Home extends Component {
       if (response.isConnected) {
         // console.log("Conectado");
       } else {
-        console.log("Desconectado.");
+        // console.log("Desconectado.");
       }
       this.uploadVisitas();
       this.handleListVisitasLocal();
@@ -123,46 +128,51 @@ class Home extends Component {
   };
 
   handleSaveStorage = async (data) => {
-    try {
-      const newArray = [];
-      const local = await AsyncStorage.getItem("visitas");
-      const localVisits = JSON.parse(local);
-      const visits = localVisits.visits;
+    const user = await AsyncStorage.getItem("user");
+    const nick = JSON.parse(user);
+    const local = await AsyncStorage.getItem(`${nick.user.nick}`);
+    const localParsed = JSON.parse(local);
 
-      for (let index = 0; index < data.length; index++) {
-        const element = data[index];
-        const isSaved = visits.find((v) => v.id === element.id);
-        if (isSaved) {
-          newArray.push(isSaved);
-        } else {
-          newArray.push(element);
-        }
+    // await AsyncStorage.removeItem(`${nick.user.nick}`);
+
+    var newStorage = [];
+
+    data.forEach((visit) => {
+      const isLocal = localParsed.visits.filter(
+        (local) => local.id === visit.id
+      );
+
+      if (isLocal.length) {
+        console.log("Local Salvo");
+        newStorage.push(isLocal[0]);
+      } else {
+        console.log("Local nao Salvo");
+        newStorage.push(visit);
       }
+    });
 
-      const user = await AsyncStorage.getItem("user");
-      const nick = JSON.parse(user);
+    const storage = {
+      user: nick.user.nick,
+      visits: newStorage,
+    };
 
-      const storage = {
-        user: nick.user.nick,
-        visits: newArray,
-      };
-
-      await AsyncStorage.setItem("visitas", JSON.stringify(storage));
-      console.log("Salvas em localStorage");
-    } catch (error) {}
+    await AsyncStorage.setItem(`${nick.user.nick}`, JSON.stringify(storage));
 
     this.handleListVisitasLocal();
   };
 
   uploadVisitas = async () => {
     const api = await AsyncStorage.getItem("api");
+
     const user = await AsyncStorage.getItem("user");
+    const nick = JSON.parse(user);
+
     const apiParsed = JSON.parse(api);
     const userParsed = JSON.parse(user);
 
     const url = apiParsed.url;
 
-    const local = await AsyncStorage.getItem("visitas");
+    const local = await AsyncStorage.getItem(`${nick.user.nick}`);
     const localVisitas = JSON.parse(local);
     const visitas = localVisitas.visits;
 
@@ -175,30 +185,13 @@ class Home extends Component {
       visitas,
     };
 
+    // console.log(data);
+
     await axios
       .put(`${url}/visita`, data, config)
-      .then(async (response) => {
-        // console.log(response.data.visitas);
-        const newStorage = [];
-
-        const uploaded = response.data.visitas;
-
-        uploaded.forEach((visit) => {
-          const isReg = visitas.find((v) => v.id === visit.id);
-          if (isReg) {
-            newStorage.push({ ...isReg, uploaded: true });
-          }
-        });
-
-        const localstorage = {
-          user: userParsed.nick,
-          visits: newStorage,
-        };
-
-        await AsyncStorage.setItem("visitas", JSON.stringify(localstorage));
-      })
+      .then((response) => {})
       .catch((err) => {
-        console.log(err.response.data.error);
+        // console.log(err.response.data.error);
       });
   };
 
@@ -226,7 +219,7 @@ class Home extends Component {
         this.setState({
           loading: false,
         });
-        // console.log(response.data);
+
         this.handleSaveStorage(response.data);
       })
       .catch((err) => {
@@ -241,8 +234,13 @@ class Home extends Component {
   };
 
   handleListVisitasLocal = async () => {
-    const local = await AsyncStorage.getItem("visitas");
+    const user = await AsyncStorage.getItem("user");
+    const nick = JSON.parse(user);
+
+    const local = await AsyncStorage.getItem(`${nick.user.nick}`);
     const localVisits = JSON.parse(local);
+
+    // console.log(localVisits);
 
     this.setState({
       visitas: localVisits.visits,

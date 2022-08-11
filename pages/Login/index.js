@@ -139,22 +139,23 @@ class Home extends Component {
         navigation.navigate("Home");
       })
       .catch((error) => {
-        console.log(error.response.data);
-        if (error.response.data.password && !error.response.data.user) {
-          Alert.alert("Senha!", error.response.data.error);
-        }
-        if (!error.response.data.password && error.response.data.user) {
-          Alert.alert("Usuário", error.response.data.error);
-        }
+        if (error.response.data) {
+          if (error.response.data.password && !error.response.data.user) {
+            Alert.alert("Senha!", error.response.data.error);
+          }
+          if (!error.response.data.password && error.response.data.user) {
+            Alert.alert("Usuário", error.response.data.error);
+          }
 
-        if (!error.response.data) {
-          Alert.alert(
-            "Conexão",
-            "Falha ao realizar conexão com o servidor, tente novamente mais tarde."
-          );
+          if (!error.response.data) {
+            Alert.alert(
+              "Conexão",
+              "Falha ao realizar conexão com o servidor, tente novamente mais tarde."
+            );
+          }
+        } else {
+          Alert.alert("Conexão!", "Falha ao conectar-se com o servidor!");
         }
-
-        console.log(error.response.data);
       });
 
     this.setState({ loading: false });
