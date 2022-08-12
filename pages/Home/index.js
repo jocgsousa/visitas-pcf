@@ -121,7 +121,7 @@ class Home extends Component {
       }
       this.uploadVisitas();
       this.handleListVisitas(true);
-    }, 10000);
+    }, 2000);
 
     this.setState({
       time,
@@ -145,7 +145,14 @@ class Home extends Component {
 
       if (isLocal.length > 0) {
         console.log("Local Salvo");
-        newStorage.push({ ...isLocal[0], visit });
+        newStorage.push({
+          ...isLocal[0],
+          user: {
+            ...isLocal[0].user,
+            endereco: visit.user.endereco,
+            idade_extense: visit.idade_extense,
+          },
+        });
       } else {
         console.log("Local nao Salvo");
         newStorage.push(visit);
@@ -290,7 +297,7 @@ class Home extends Component {
 
             <TextInfo>
               {item.user.name}{" "}
-              {item.user.idade && ` - IDADE: ${item.user.idade}`}
+              {` - IDADE: ${item.user.idade_extense.years} Ano(s), ${item.user.idade_extense.months} Mes(es), ${item.user.idade_extense.days} Dia(s).`}
             </TextInfo>
           </ColInfo>
           <ColInfo width="100%">
@@ -299,8 +306,8 @@ class Home extends Component {
             </ColIcon>
             <TextInfo>
               {item.user.endereco && item.user.endereco.logradouro}{" "}
-              {item.user.endereco && item.user.endereco.numero}
-              {item.user.endereco && item.user.endereco.bairro}
+              {item.user.endereco && item.user.endereco.numero}{" "}
+              {item.user.endereco && item.user.endereco.bairro}{" "}
             </TextInfo>
           </ColInfo>
 
