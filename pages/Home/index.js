@@ -133,45 +133,60 @@ class Home extends Component {
     const user = await AsyncStorage.getItem("user");
     const nick = JSON.parse(user);
     const local = await AsyncStorage.getItem(`${nick.user.nick}`);
-    const localParsed = JSON.parse(local);
 
-    // await AsyncStorage.removeItem(`${nick.user.nick}`);
+    if (local !== null) {
+      console.log("Tem visitas localmente");
 
-    var newStorage = [];
+      const localParsed = JSON.parse(local);
 
-    data.forEach((visit) => {
-      const isLocal = localParsed.visits.filter(
-        (local) => Number(local.id) === Number(visit.id)
-      );
+      // await AsyncStorage.removeItem(`${nick.user.nick}`);
 
-      if (isLocal.length > 0) {
-        newStorage.push({
-          ...isLocal[0],
-          user: {
-            ...isLocal[0].user,
-            name: visit.user.name,
-            endereco: visit.user.endereco,
-            idade_extense: visit.idade_extense,
-            data: visit.data,
-            date: visit.date,
-            obs: visit.obs,
-          },
-        });
-      } else {
-        newStorage.push(visit);
-      }
+      var newStorage = [];
 
-      console.log(newStorage);
-    });
+      data.forEach((visit) => {
+        const isLocal = localParsed.visits.filter(
+          (local) => Number(local.id) === Number(visit.id)
+        );
 
-    const storage = {
-      user: nick.user.nick,
-      visits: newStorage,
-    };
+        if (isLocal.length > 0) {
+          newStorage.push({
+            ...isLocal[0],
+            user: {
+              ...isLocal[0].user,
+              name: visit.user.name,
+              endereco: visit.user.endereco,
+              idade_extense: visit.idade_extense,
+              data: visit.data,
+              date: visit.date,
+              obs: visit.obs,
+            },
+          });
+        } else {
+          newStorage.push(visit);
+        }
 
-    await AsyncStorage.setItem(`${nick.user.nick}`, JSON.stringify(storage));
+        console.log(newStorage);
+      });
 
-    this.handleListVisitasLocal();
+      const storage = {
+        user: nick.user.nick,
+        visits: newStorage,
+      };
+
+      await AsyncStorage.setItem(`${nick.user.nick}`, JSON.stringify(storage));
+
+      this.handleListVisitasLocal();
+    } else {
+      console.log("Sem visitas registradas localmente");
+      const storage = {
+        user: nick.user.nick,
+        visits: data,
+      };
+
+      await AsyncStorage.setItem(`${nick.user.nick}`, JSON.stringify(storage));
+
+      this.handleListVisitasLocal();
+    }
   };
 
   uploadVisitas = async () => {
@@ -186,28 +201,32 @@ class Home extends Component {
     const url = apiParsed.url;
 
     const local = await AsyncStorage.getItem(`${nick.user.nick}`);
-    const localVisitas = JSON.parse(local);
-    const visitas = localVisitas.visits;
 
-    const config = {
-      headers: {
-        Authorization: `Bearer ${userParsed.token}`,
-      },
-    };
-    const data = {
-      visitas,
-    };
+    if (local !== null) {
+      const localVisitas = JSON.parse(local);
+      const visitas = localVisitas.visits;
 
-    // console.log(data);
+      const config = {
+        headers: {
+          Authorization: `Bearer ${userParsed.token}`,
+        },
+      };
+      const data = {
+        visitas,
+      };
 
-    await axios
-      .put(`${url}/visita`, data, config)
-      .then(() => {
-        console.log("Upload realizado.");
-      })
-      .catch((err) => {
-        // console.log(err.response.data.error);
-      });
+      // console.log(data);
+
+      await axios
+        .put(`${url}/visita`, data, config)
+        .then(() => {
+          console.log("Upload realizado.");
+        })
+        .catch((err) => {
+          // console.log(err.response.data.error);
+        });
+    } else {
+    }
   };
 
   handleListVisitas = async (isLoading) => {
@@ -260,13 +279,16 @@ class Home extends Component {
     const nick = JSON.parse(user);
 
     const local = await AsyncStorage.getItem(`${nick.user.nick}`);
-    const localVisits = JSON.parse(local);
 
-    // console.log(localVisits);
+    if (local !== null) {
+      const localVisits = JSON.parse(local);
 
-    this.setState({
-      visitas: localVisits.visits,
-    });
+      // console.log(localVisits);
+
+      this.setState({
+        visitas: localVisits.visits,
+      });
+    }
   };
 
   componentWillUnmount() {
