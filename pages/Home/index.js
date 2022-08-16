@@ -97,8 +97,6 @@ class Home extends Component {
 
     this.checkNet();
 
-    this.uploadVisitas();
-
     // const user = await AsyncStorage.getItem("user");
 
     // const nick = JSON.parse(user);
@@ -115,12 +113,15 @@ class Home extends Component {
       // console.log(response.isConnected);
       if (response.isConnected) {
         // console.log("Conectado");
+        setTimeout(() => {
+          this.uploadVisitas();
+        }, 5000);
       } else {
         // console.log("Desconectado.");
         this.handleListVisitasLocal();
       }
-      this.uploadVisitas();
       this.handleListVisitas(true);
+      // this.uploadVisitas();
     }, 2000);
 
     this.setState({
@@ -140,23 +141,27 @@ class Home extends Component {
 
     data.forEach((visit) => {
       const isLocal = localParsed.visits.filter(
-        (local) => local.id === visit.id
+        (local) => Number(local.id) === Number(visit.id)
       );
 
       if (isLocal.length > 0) {
-        console.log("Local Salvo");
         newStorage.push({
           ...isLocal[0],
           user: {
             ...isLocal[0].user,
+            name: visit.user.name,
             endereco: visit.user.endereco,
             idade_extense: visit.idade_extense,
+            data: visit.data,
+            date: visit.date,
+            obs: visit.obs,
           },
         });
       } else {
-        console.log("Local nao Salvo");
         newStorage.push(visit);
       }
+
+      console.log(newStorage);
     });
 
     const storage = {
@@ -197,7 +202,9 @@ class Home extends Component {
 
     await axios
       .put(`${url}/visita`, data, config)
-      .then(() => {})
+      .then(() => {
+        console.log("Upload realizado.");
+      })
       .catch((err) => {
         // console.log(err.response.data.error);
       });
@@ -235,6 +242,7 @@ class Home extends Component {
         });
 
         this.handleSaveStorage(response.data);
+        console.log("Visitas recebidas do servidor.");
       })
       .catch((err) => {
         this.setState({
